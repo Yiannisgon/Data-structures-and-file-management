@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="js/guest.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/guestStyles.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Guest Page</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome, Guest!</h1>
+        <p>You can explore our pet services and view the list of petkeepers below:</p>
+        <!-- The list of petkeepers will be dynamically generated using getAvailableKeepers func -->
+        <div id="availableKeepers"></div>
+
+    </div>
+    <footer style="background-color: #f2f2f2; padding: 20px; text-align: center;">
+        <h3>Find More Pet Services</h3>
+        <ul style="list-style: none; padding: 0;">
+            <li><a href="https://www.i-pet.gr/" target="_blank">Similar Site 1</a></li>
+            <li><a href="https://allaboutpets.gr/katoikidia-zoa-gia-mesa-sto-spiti/" target="_blank">Similar Site 2</a></li>
+            <li><a href="https://www.facebook.com/UniversityOfCrete" target="_blank">facebook</a></li>
+            <!-- More links can be added here -->
+        </ul>
+    </footer>
+    <script>
+        window.onload = function() {
+            getAvailableKeepers();
+        };
+    </script>
+</body>
+</html>

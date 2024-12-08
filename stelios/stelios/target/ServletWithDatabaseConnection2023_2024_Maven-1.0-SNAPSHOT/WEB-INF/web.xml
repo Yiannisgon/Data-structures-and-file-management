@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <servlet><!-- ADD THIS -->
+        <servlet-name>Stats</servlet-name>
+        <servlet-class>servlets.GetStatistics</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GetKeeper</servlet-name>
+        <servlet-class>servlets.GetPetKeeper</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GetOwner</servlet-name>
+        <servlet-class>servlets.GetPetOwner</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Users</servlet-name>
+        <servlet-class>servlets.GetUsers</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AvailableKeepers</servlet-name>
+        <servlet-class>servlets.GetAvailableKeepers</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteUser</servlet-name>
+        <servlet-class>servlets.DeleteUser</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CreatePetOwner</servlet-name>
+        <servlet-class>servlets.CreatePetOwner</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CreatePetKeeper</servlet-name>
+        <servlet-class>servlets.CreatePetKeeper</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>InitDB</servlet-name>
+        <servlet-class>servlets.InitDB</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteDB</servlet-name>
+        <servlet-class>servlets.DeleteDB</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GetOwner</servlet-name>
+        <url-pattern>/GetOwner</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping><!-- add this -->
+        <servlet-name>AvailableKeepers</servlet-name>
+        <url-pattern>/AvailableKeepers</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping><!-- add this -->
+        <servlet-name>Users</servlet-name>
+        <url-pattern>/Users</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping><!-- add this -->
+        <servlet-name>DeleteUser</servlet-name>
+        <url-pattern>/DeleteUser</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreatePetKeeper</servlet-name>
+        <url-pattern>/CreatePetKeeper</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreatePetOwner</servlet-name>
+        <url-pattern>/CreatePetOwner</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetKeeper</servlet-name>
+        <url-pattern>/GetKeeper</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>InitDB</servlet-name>
+        <url-pattern>/InitDB</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteDB</servlet-name>
+        <url-pattern>/DeleteDB</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping><!-- ADD THIS -->
+        <servlet-name>Stats</servlet-name>
+        <url-pattern>/Stats</url-pattern>
+    </servlet-mapping>
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+</web-app>

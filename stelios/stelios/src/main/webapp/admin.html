@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Actions</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div id="admin-actions-container">
+    <h2>Admin Actions</h2>
+
+    <button onclick="initDB()">Init Database</button>
+    <button onclick="deleteDB()">Delete Database</button>
+
+    <!-- Button to show all users -->
+    <button onclick="showAllUsers()">Show All Users</button>
+
+    <!-- Button to show statistics -->
+    <button onclick="showStatistics()">Show Statistics</button>
+
+    <!-- Logout button -->
+    <button onclick="logout()">Logout</button>
+
+    <!-- Modal for displaying user list -->
+    <div id="userListModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <!-- Container for displaying user list -->
+            <h3>All Keepers</h3>
+            <div id="keeperList"></div>
+            <h3>All Owners</h3>
+            <div id="ownerList"></div>
+        </div>
+    </div>
+    <!-- Divs for Google Charts -->
+    <div id="catDogChart" style="width: 100%; height: 500px;"></div>
+    <div id="ownerKeeperChart" style="width: 100%; height: 500px;"></div>
+    <div id="earningsChart" style="width: 100%; height: 500px;"></div>
+</div>
+
+<script src="js/admin-actions.js"></script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+/* Reset default browser styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Set the background image for the body */
+body {
+    background-image: url('../img/photo-1623387641168-d9803ddd3f35.jfif');
+    background-size: cover;
+    background-position: center;
+    font-family: Arial, sans-serif;
+    color: #fff; 
+}
+
+/* Center the form container */
+.container {
+    max-width: 750px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #FFA500; 
+    opacity: 0.9; 
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Style the form heading */
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Style the text inputs */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="url"],
+input[type="tel"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #000; 
+    border: 1px solid #fff; 
+    border-radius: 5px;
+    color: #fff; 
+}
+
+/* Style the radio buttons and checkboxes */
+input[type="radio"],
+input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+/* Style the select element */
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #000; /* Set the background color to black */
+    border: 1px solid #fff; /* Set a white border */
+    border-radius: 5px;
+    color: #fff; /* Set the text color to white */
+}
+
+/* Style the submit button */
+input[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+
+@media (max-width: 500px) {
+    .container {
+        padding: 10px;
+    }
+}
+
+
+#pet-keeper-fields {
+    background-color: #000;
+    padding: 10px;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+#pet-keeper-fields label {
+    color: #fff;
+    margin-bottom: 5px;
+}
+
+#pet-keeper-fields input[type="radio"],
+#pet-keeper-fields input[type="checkbox"] {
+    margin-right: 5px;
+    color: #fff;
+}
+
+#pet-keeper-fields input[type="number"] {
+    width: 100px;
+    padding: 10px;
+    background-color: #000;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    color: #fff;
+}
+
+#pet-keeper-fields textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    background-color: #000;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    color: #fff;
+}
+
+
+#Map {
+    height: 600px;
+    width: 700px;
+    margin: 0 auto;
+    background-color: #000; /* Set the background color to black */
+    border: 1px solid #fff; /* Set a white border */
+    border-radius: 5px;
+    overflow: hidden;
+}
+

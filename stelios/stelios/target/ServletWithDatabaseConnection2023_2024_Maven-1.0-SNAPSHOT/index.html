@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetKeeper Login</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div id="login-container">
+    <h2>PetKeeper Login</h2>
+    <form id="login-form" onsubmit="checkCredentials(event)">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit">Login</button>
+    </form>
+
+    <p>Or continue as a guest:</p>
+    <button onclick="continueAsGuest()">Continue as Guest</button>
+</div>
+
+<script src="js/script.js"></script>
+</body>
+</html>

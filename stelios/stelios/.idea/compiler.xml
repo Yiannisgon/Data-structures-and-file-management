@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="ServletWithDatabaseConnection2023_2024_Maven" />
+        <module name="stelios" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="ServletWithDatabaseConnection2023_2024_Maven" options="-endorseddirs &quot;C:\Users\Yiannis Gonianakis\Desktop\CSD\hy359\stelios\stelios\target/endorsed&quot;" />
+      <module name="stelios" options="-endorseddirs C:\Users\Yiannisgon\Desktop\stelios\stelios\target/endorsed" />
+    </option>
+  </component>
+</project>

@@ -1,0 +1,126 @@
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background-image: url("../img/background.png"); /* Update with your image path */
+    background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.container {
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Header Styles */
+header {
+    background: #fff;
+    color: #333;
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Section Styles */
+section {
+    margin: 20px 0;
+    padding: 20px;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Form Styles */
+form {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap: 15px;
+    padding: 20px;
+    background: #e9ecef;
+    border-radius: 5px;
+}
+
+form input, form select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+form button {
+    padding: 10px;
+    border: none;
+    background-color: #5cb85c;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #4cae4c;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+/* Button Styles */
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #0275d8;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #025aa5;
+}
+
+/* Responsive Design */
+@media (max-width: 700px) {
+    .container {
+        width: 95%;
+    }
+
+    form {
+        grid-template-columns: 1fr;
+    }
+}
+
+.welcome-message {
+    /* Inherit styles from body for font, color, etc. */
+    font-family: inherit;
+    color: inherit;
+    line-height: inherit;
+
+    /* Any additional specific styles for welcome message */
+    font-size: 1.2em; /* Example: Increase font size */
+    margin-bottom: 15px; /* Example: Add some margin */
+}

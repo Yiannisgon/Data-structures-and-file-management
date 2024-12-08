@@ -1,0 +1,62 @@
+body {
+  /*add image as background*/
+    background-image: url("../img/background.png");
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+#userListModal {
+  background-color: #fff; /* Set modal background to white */
+  /* Add other modal styles here, such as padding, border, etc. */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+
+#login-container {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  box-sizing: border-box;
+}
+
+button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+
+
+button:hover {
+  background-color: #45a049;
+}
+#admin-actions-container {
+  /* Other styles for your container */
+  max-height: 80vh; /* Set a maximum height for the container */
+  overflow: auto;   /* Enable scrolling if content overflows */
+}
+
+#keeperList, #ownerList {
+  /* Other styles for your user list divs */
+  max-height: 50vh; /* Set a maximum height for the user list divs */
+  overflow-y: auto; /* Enable vertical scrolling if content overflows vertically */
+}
