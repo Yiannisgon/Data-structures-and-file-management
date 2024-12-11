@@ -183,4 +183,27 @@ public class Resources {
             +     "\"keeper_id\":\"1\","
             + "\"reviewText\":\"Ola teleia!!\","
             + "\"reviewScore\":\"5\"}";
+
+         //new examples
+         static String customer1 = "{\"name\":\"John Doe\",\"email\":\"john.doe@example.com\",\"credit_card_details\":\"4111111111111111\"}";
+
+    static String customer2 = "{\"name\":\"Jane Doe\",\"email\":\"jane.doe@example.com\",\"credit_card_details\":\"5500000000000004\"}";
+
+    static String event1 = "{\"name\":\"Music Festival\",\"date\":\"2024-06-01\"," +
+            "\"time\":\"10:00:00\",\"capacity\":\"50\",\"type\":\"Concert\"}";
+
+    static String event2 = "{\"name\":\"Party Festival\",\"date\":\"2024-06-02\"," +
+            "\"time\":\"15:00:00\",\"capacity\":\"30\",\"type\":\"Theatre\"}";
+
+    static String reservation1 = "{\"customer_id\":\"1\",\"event_id\":\"1\"," +
+            "\"ticket_count\":\"1\", \"payment_amount\":\"10\", \"reservation_date\":\"2023-08-11 16:10:10\"}";
+
+    static String reservation2 = "{\"customer_id\":\"2\",\"event_id\":\"2\"," +
+            "\"ticket_count\":\"2\", \"payment_amount\":\"20\", \"reservation_date\":\"2023-04-11 15:10:10\"}";
+
+    static String ticket1 = "{\"price\":\"10.00\",\"availability\":\"10\"," +
+            "\"type\":\"VIP\"}";
+
+    static String ticket2 = "{\"price\":\"5.00\",\"availability\":\"20\"," +
+            "\"type\":\"GeneralAdmission\"}";
 }

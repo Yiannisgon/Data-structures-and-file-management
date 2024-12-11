@@ -7,14 +7,10 @@ package database.init;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import database.tables.EditPetsTable;
-import static database.DB_Connection.getInitialConnection;
-import database.tables.EditBookingsTable;
-import database.tables.EditMessagesTable;
+import database.tables.*;
 
-import database.tables.EditPetOwnersTable;
-import database.tables.EditPetKeepersTable;
-import database.tables.EditReviewsTable;
+import static database.DB_Connection.getInitialConnection;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -78,6 +74,19 @@ public class InitDatabase {
 
         EditMessagesTable editMsgs = new EditMessagesTable();
         editMsgs.createMessageTable();
+
+        // New Classes
+        EditCustomersTable editCustomers = new EditCustomersTable();
+        editCustomers.createCustomersTable();
+
+        EditEventsTable editEvents = new EditEventsTable();
+        editEvents.createEventsTable();
+
+        EditReservationsTable editReservations = new EditReservationsTable();
+        editReservations.createReservationsTable();
+
+        EditTicketsTable editTickets = new EditTicketsTable();
+        editTickets.createTicketsTable();
     }
 
     public void addToDatabaseExamples() throws ClassNotFoundException, SQLException {
@@ -114,6 +123,23 @@ public class InitDatabase {
 
         EditReviewsTable editRevs = new EditReviewsTable();
         editRevs.addReviewFromJSON(Resources.review1);
+
+        // New examples
+        EditCustomersTable editCustomers = new EditCustomersTable();
+        editCustomers.addCustomerFromJSON(Resources.customer1);
+        editCustomers.addCustomerFromJSON(Resources.customer2);
+
+        EditEventsTable editEvents = new EditEventsTable();
+        editEvents.addEventFromJSON(Resources.event1);
+        editEvents.addEventFromJSON(Resources.event2);
+
+        EditReservationsTable editReservations = new EditReservationsTable();
+        editReservations.addReservationFromJSON(Resources.reservation1);
+        editReservations.addReservationFromJSON(Resources.reservation2);
+
+        EditTicketsTable editTickets = new EditTicketsTable();
+        editTickets.addTicketFromJSON(Resources.ticket1);
+        editTickets.addTicketFromJSON(Resources.ticket2);
     }
 
     public void databaseToJSON() throws ClassNotFoundException, SQLException {

@@ -311,3 +311,16 @@ function calculateEarnings(bookings) {
 
     return {keepersEarnings, appEarnings};
 }
+
+function CreateUser() {
+    return;
+}
+function CreateEvent() {
+    return;
+}
+function getAvailableTickets() {
+    return;
+}
+function getEvents() {
+    return;
+}
