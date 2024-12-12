@@ -158,18 +158,24 @@ public class EditEventsTable {
         }
     }
     public void deleteEventById(String eventId) throws ClassNotFoundException {
-        try {
-            Connection con = DB_Connection.getConnection();
-            Statement stmt = con.createStatement();
+        String deleteQuery = "DELETE FROM events WHERE event_id = ?";
 
-            String deleteQuery = "DELETE FROM events WHERE event_id = '" + eventId + "'";
-            System.out.println(deleteQuery);
-            stmt.executeUpdate(deleteQuery);
-            System.out.println("# The event was successfully deleted from the database.");
+        try (Connection con = DB_Connection.getConnection();
+             PreparedStatement pstmt = con.prepareStatement(deleteQuery)) {
 
-            stmt.close();
+            // Set the eventId parameter in the prepared statement
+            pstmt.setString(1, eventId);
+
+            int rowsAffected = pstmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("# The event was successfully deleted from the database.");
+            } else {
+                System.out.println("# No event found with the provided ID.");
+            }
+
         } catch (SQLException ex) {
             Logger.getLogger(EditEventsTable.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException("Error deleting the event from the database: " + ex.getMessage());
         }
     }
 

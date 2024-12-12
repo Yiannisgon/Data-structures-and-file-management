@@ -391,19 +391,24 @@ function createTableEvent(event) {
 }
 
 function deleteEvent(eventId) {
+    if (!eventId || isNaN(eventId)) {
+        console.error("Invalid event ID:", eventId);
+        alert("Invalid Event ID!");
+        return;
+    }
+
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             console.log("Event deleted: " + eventId);
-            // After successful deletion, refresh the event list
-            getEvents();
+            getEvents(); // Refresh the event list
         } else if (xhr.status !== 200) {
-            console.error("Error deleting event: " + eventId);
+            console.error("Error deleting event: " + eventId, xhr.responseText);
         }
     };
 
-    // Adjust the URL to include event ID
-    var url = 'DeleteEvent?id=' + eventId;
+    var url = 'DeleteEvent?event_id=' + eventId; // Updated parameter name to 'event_id'
+    console.log("Request URL:", url); // Log the URL for debugging
     xhr.open('GET', url);
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhr.send();

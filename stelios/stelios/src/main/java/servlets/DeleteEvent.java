@@ -3,6 +3,7 @@ package servlets;
 import database.tables.EditEventsTable;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,6 +14,7 @@ import java.util.logging.Logger;
 /**
  * Servlet to delete an event from the database.
  */
+@WebServlet(name = "DeleteEvent", urlPatterns = {"/DeleteEvent"})
 public class DeleteEvent extends HttpServlet {
 
     @Override
