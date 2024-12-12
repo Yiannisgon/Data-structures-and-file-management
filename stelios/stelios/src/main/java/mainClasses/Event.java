@@ -1,17 +1,15 @@
 package mainClasses;
 
-public class Event {
+import java.sql.Date;
+import java.sql.Time;
 
-    // NOTE : The java.sql package has three date/time types:
-    //java.sql.Date - A date only (no time part)
-    //java.sql.Time - A time only (no date part)
-    //java.sql.Timestamp - Both date and time
-    // -Y
-    String name;
-    int event_id, Capacity;
-    java.sql.Date Date;
-    java.sql.Time Time;
-    String Type;
+public class Event {
+    private String name;
+    private int capacity; // Renamed to match JSON key "capacity"
+    private Date date; // Matches JSON key "date"
+    private Time time; // Matches JSON key "time"
+    private String type; // Renamed to match JSON key "type"
+    private int event_id; // Retained as-is, assuming it's for internal use and not part of the JSON
 
     public String getName() {
         return name;
@@ -21,43 +19,43 @@ public class Event {
         this.name = name;
     }
 
-    public int getEvent_id() {
+    public int getEventId() {
         return event_id;
     }
 
-    public void setEvent_id(int event_id) {
+    public void setEventId(int event_id) {
         this.event_id = event_id;
     }
 
     public int getCapacity() {
-        return Capacity;
+        return capacity;
     }
 
     public void setCapacity(int capacity) {
-        Capacity = capacity;
+        this.capacity = capacity;
     }
 
-    public java.util.Date getDate() {
-        return Date;
+    public Date getDate() {
+        return date;
     }
 
-    public void setDate(java.sql.Date date) {
-        Date = date;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
-    public java.sql.Time getTime() {
-        return Time;
+    public Time getTime() {
+        return time;
     }
 
-    public void setTime(java.sql.Time time) {
-        Time = time;
+    public void setTime(Time time) {
+        this.time = time;
     }
 
     public String getType() {
-        return Type;
+        return type;
     }
 
     public void setType(String type) {
-        Type = type;
+        this.type = type;
     }
 }

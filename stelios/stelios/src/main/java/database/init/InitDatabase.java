@@ -127,7 +127,7 @@ public class InitDatabase {
         // New examples
         EditCustomersTable editCustomers = new EditCustomersTable();
         editCustomers.addCustomerFromJSON(Resources.customer1);
-//        editCustomers.addCustomerFromJSON(Resources.customer2);
+        editCustomers.addCustomerFromJSON(Resources.customer2);
 
         EditEventsTable editEvents = new EditEventsTable();
         editEvents.addEventFromJSON(Resources.event1);
