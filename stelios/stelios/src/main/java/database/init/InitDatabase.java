@@ -140,8 +140,8 @@ public class InitDatabase {
         editReservations.addReservationFromJSON(Resources.reservation2);
 
         EditTicketsTable editTickets = new EditTicketsTable();
-//        editTickets.addTicketFromJSON(Resources.ticket1);
-//        editTickets.addTicketFromJSON(Resources.ticket2);
+        editTickets.addTicketFromJSON(Resources.ticket1);
+        editTickets.addTicketFromJSON(Resources.ticket2);
     }
 
     public void databaseToJSON() throws ClassNotFoundException, SQLException {

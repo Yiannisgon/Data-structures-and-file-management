@@ -11,13 +11,27 @@ import java.util.logging.Logger;
 public class EditReservationsTable {
 
     public void addReservationFromJSON(String json) throws ClassNotFoundException {
+        System.out.println("hoy");
         Reservation reservation = jsonToReservation(json);
+        System.out.println("Parsed Reservation: " + reservation);
+        System.out.println("hey");
         addReservation(reservation);
     }
 
+
     public Reservation jsonToReservation(String json) {
         Gson gson = new Gson();
-        return gson.fromJson(json, Reservation.class);
+        Reservation reservation = null;
+
+        try {
+            reservation = gson.fromJson(json, Reservation.class);
+            System.out.println("JSON successfully parsed to Reservation object.");
+        } catch (Exception e) {
+            System.err.println("Error parsing JSON to Reservation: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return reservation;
     }
 
     public String reservationToJSON(Reservation reservation) {
@@ -30,13 +44,19 @@ public class EditReservationsTable {
         Statement stmt = con.createStatement();
 
         String query = "CREATE TABLE reservations ("
-                + "res_id INTEGER not NULL AUTO_INCREMENT, "
-                + "customer_id INTEGER not NULL, "
-                + "event_id INTEGER not NULL, "
-                + "ticket_count INTEGER not NULL, "
-                + "payment_amount INTEGER not NULL, "
-                + "reservation_date TIMESTAMP not NULL, "
-                + "PRIMARY KEY (res_id))";
+                + "reservation_id INTEGER NOT NULL AUTO_INCREMENT, "
+                + "customer_id INTEGER NOT NULL, "
+                + "event_id INTEGER NOT NULL, "
+                + "ticket_count INTEGER NOT NULL, "
+                + "payment_amount FLOAT NOT NULL, "
+                + "reservation_date TIMESTAMP NOT NULL, "
+                + "PRIMARY KEY (reservation_id), "
+                + "FOREIGN KEY (customer_id) REFERENCES customers(customer_id) "
+                + "ON DELETE CASCADE ON UPDATE CASCADE, "
+                + "FOREIGN KEY (event_id) REFERENCES events(event_id) "
+                + "ON DELETE CASCADE ON UPDATE CASCADE"
+                + ")";
+
         stmt.execute(query);
         stmt.close();
     }

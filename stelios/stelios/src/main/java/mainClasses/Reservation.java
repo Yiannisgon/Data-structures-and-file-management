@@ -3,8 +3,12 @@ package mainClasses;
 import java.sql.Timestamp;
 
 public class Reservation {
-    int reservationId, customerId, eventId, TicketCount, PaymentAmount;
-    Timestamp ReservationDate;
+    private int reservationId;
+    private int customerId;
+    private int eventId;
+    private int ticketCount;
+    private float paymentAmount;
+    private Timestamp reservationDate;
 
     public int getReservationId() {
         return reservationId;
@@ -31,26 +35,26 @@ public class Reservation {
     }
 
     public int getTicketCount() {
-        return TicketCount;
+        return ticketCount;
     }
 
     public void setTicketCount(int ticketCount) {
-        TicketCount = ticketCount;
+        this.ticketCount = ticketCount;
     }
 
-    public int getPaymentAmount() {
-        return PaymentAmount;
+    public float getPaymentAmount() {
+        return paymentAmount;
     }
 
-    public void setPaymentAmount(int paymentAmount) {
-        PaymentAmount = paymentAmount;
+    public void setPaymentAmount(float paymentAmount) {
+        this.paymentAmount = paymentAmount;
     }
 
     public Timestamp getReservationDate() {
-        return ReservationDate;
+        return reservationDate;
     }
 
     public void setReservationDate(Timestamp reservationDate) {
-        ReservationDate = reservationDate;
+        this.reservationDate = reservationDate;
     }
 }

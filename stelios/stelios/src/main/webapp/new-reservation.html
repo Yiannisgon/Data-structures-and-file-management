@@ -26,9 +26,19 @@
         <label for="eventID">Event ID:</label>
         <input type="number" id="eventID" name="eventID" required>
 
-        <button type="submit">Submit Reservation</button>
+        <button type="submit" onclick="submitReservationForm()">Submit Reservation</button>
     </div>
 
 </form>
+<button onclick="showAllEvents()">Show All Events</button>
+<div id="eventListModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <!-- Container for displaying event list -->
+        <h3>All Events</h3>
+        <div id="eventList"></div>
+    </div>
+</div>
+<script src="js/register-reservation.js"></script>
 </body>
 </html>

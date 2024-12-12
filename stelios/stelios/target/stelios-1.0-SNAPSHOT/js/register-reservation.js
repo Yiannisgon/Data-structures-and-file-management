@@ -1,34 +1,33 @@
-// Function to validate form inputs
-function validateReservationForm(formData) {
-    if (
-        isNaN(formData.event_id) || formData.event_id <= 0 ||
-        isNaN(formData.customer_id) || formData.customer_id <= 0 ||
-        isNaN(formData.ticket_count) || formData.ticket_count <= 0 ||
-        !formData.reservation_date ||
-        isNaN(formData.payment_amount) || formData.payment_amount <= 0
-    ) {
-        alert("All fields must be filled correctly with valid values!");
-        return false;
-    }
-    return true;
-}
-
-// Function to collect form data
-function collectReservationData() {
-    let reservationDateInput = document.getElementById("reservation-date").value;
-
-    return {
-        "event_id": parseInt(document.getElementById("event-id").value),
-        "customer_id": parseInt(document.getElementById("customer-id").value),
-        "ticket_count": parseInt(document.getElementById("ticket-count").value),
-        "reservation_date": reservationDateInput.trim(),
-        "payment_amount": parseFloat(document.getElementById("payment-amount").value)
+function submitReservationForm() {
+    // Collect form data
+    var formData = {
+        "ticketCount": parseInt(document.getElementById("ticketCount").value),
+        "reservationDate": document.getElementById("reservationDate").value.trim(),
+        "paymentAmount": parseFloat(document.getElementById("paymentAmount").value),
+        "customerID": parseInt(document.getElementById("customerID").value),
+        "eventID": parseInt(document.getElementById("eventID").value)
     };
-}
 
-// Function to send reservation data to the server
-function sendReservationData(formData) {
-    // Initialize XMLHttpRequest
+    // Validate form data
+    if (!formData.ticketCount || !formData.reservationDate || isNaN(formData.paymentAmount) || !formData.customerID || !formData.eventID) {
+        alert("All fields are required and must be valid!");
+        return;
+    }
+
+    if (isNaN(formData.ticketCount) || formData.ticketCount <= 0) {
+        alert("Ticket count must be a positive number!");
+        return;
+    }
+
+    if (isNaN(formData.paymentAmount) || formData.paymentAmount <= 0) {
+        alert("Payment amount must be a positive number!");
+        return;
+    }
+
+    // Log the form data for debugging
+    console.log("Form Data:", formData);
+
+    // Initialize XMLHttpRequest for form submission
     var xhr = new XMLHttpRequest();
     xhr.open('POST', 'CreateReservation', true); // Adjusted endpoint for reservation creation
     xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
@@ -50,52 +49,61 @@ function sendReservationData(formData) {
     // Send collected data as JSON
     xhr.send(JSON.stringify(formData));
 }
-
-// Main function to handle the reservation submission
-function submitReservation() {
-    const formData = collectReservationData();
-
-    if (validateReservationForm(formData)) {
-        sendReservationData(formData);
-    }
+function closeModal() {
+    // Close the modal
+    const modal = document.getElementById('userListModal');
+    modal.style.display = 'none';
 }
 
+function showAllEvents() {
+    getEvents();
+    toggleDisplay('eventListModal');
+}
 
-// Function to fetch events from the server
-function fetchEvents() {
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', 'GetAllEvents', true); // Adjust the endpoint if necessary
-    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+function getEvents() {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            // Parse the JSON response
+            var events = JSON.parse(xhr.responseText);
 
-    xhr.onload = function() {
-        if (xhr.status === 200) {
-            const events = JSON.parse(xhr.responseText);
-            console.log("Fetched Events:", events);
+            // Create HTML content for each event using createTableEvent function
+            var eventListContent = '';
+            events.forEach(function(event) {
+                eventListContent += createTableEvent(event);
+            });
 
-            populateEventDropdown(events); // Call to populate dropdown
-        } else {
-            console.error("Failed to fetch events. Status:", xhr.status, "Response:", xhr.responseText);
+            // Update the #eventList div with the event data
+            $("#eventList").html(eventListContent);
+        } else if (xhr.status !== 200) {
+            // Handle errors here, such as displaying a message to the user
+            $("#eventList").html("Could not retrieve events data.");
         }
     };
 
-    xhr.onerror = function() {
-        console.error("Error during the request.");
-    };
-
+    xhr.open('GET', 'GetEvents');
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhr.send();
 }
 
-// Function to populate the event dropdown
-function populateEventDropdown(events) {
-    const eventDropdown = document.getElementById("event-dropdown");
+function createTableEvent(event) {
+    var html = '<table>';
+    html += '<tr><th colspan="2">' + event.name + '</th></tr>';
 
-    events.forEach(event => {
-        const option = document.createElement("option");
-        option.value = event.eventId; // Assuming eventId exists in the Event object
-        option.textContent = `${event.name} (${event.date}, ${event.time})`;
-        eventDropdown.appendChild(option);
+    // Add event_id if present
+    if (event.hasOwnProperty('event_id') && event.event_id !== null) {
+        html += '<tr><td>Event ID</td><td>' + event.event_id + '</td></tr>';
+    }
+
+    // Include keys and their values dynamically
+    var includeKeys = ['name', 'capacity', 'date', 'time', 'type'];
+    includeKeys.forEach(function(key) {
+        if (event.hasOwnProperty(key) && event[key] !== null) {
+            var value = event[key];
+            html += '<tr><td>' + key.charAt(0).toUpperCase() + key.slice(1) + '</td><td>' + value + '</td></tr>';
+        }
     });
-}
 
-// Call the fetchEvents function when the page loads
-document.addEventListener("DOMContentLoaded", fetchEvents);
+    html += '</table>';
+    return html;
+}

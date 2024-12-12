@@ -17,13 +17,26 @@ public class EditTicketsTable {
 
 
     public void addTicketFromJSON(String json) throws ClassNotFoundException {
+        System.out.println("Parsing Ticket JSON...");
         Ticket ticket = jsonToTicket(json);
+        System.out.println("Parsed Ticket: " + ticket);
+        System.out.println("Adding Ticket...");
         addTicket(ticket);
     }
 
     public Ticket jsonToTicket(String json) {
         Gson gson = new Gson();
-        return gson.fromJson(json, Ticket.class);
+        Ticket ticket = null;
+
+        try {
+            ticket = gson.fromJson(json, Ticket.class);
+            System.out.println("JSON successfully parsed to Ticket object.");
+        } catch (Exception e) {
+            System.err.println("Error parsing JSON to Ticket: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return ticket;
     }
 
     public String ticketToJSON(Ticket ticket) {

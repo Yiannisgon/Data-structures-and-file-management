@@ -192,15 +192,12 @@ public class Resources {
     static String event1 = "{\"name\":\"Movie Festival\",\"capacity\":10,\"date\":\"Dec 20, 2024\",\"time\":\"01:00:00 PM\",\"type\":\"Theater\"}";
     static String event2 = "{\"name\":\"Disco Festival\",\"capacity\":100,\"date\":\"Dec 25, 2024\",\"time\":\"02:00:00 PM\",\"type\":\"Concert\"}";
 
-    static String reservation1 = "{\"customer_id\":\"1\",\"event_id\":\"1\"," +
-            "\"ticket_count\":\"1\", \"payment_amount\":\"10\", \"reservation_date\":\"2023-08-11 16:10:10\"}";
+    static String reservation1 = "{\"customerId\":1,\"eventId\":1,\"ticketCount\":1,\"paymentAmount\":1.00,\"reservationDate\":\"2023-08-11T16:10:10Z\n\"}";
+    static String reservation2 = "{\"customerId\":2,\"eventId\":1,\"ticketCount\":1,\"paymentAmount\":2.00,\"reservationDate\":\"2023-08-11T16:10:10Z\n\"}";
 
-    static String reservation2 = "{\"customer_id\":\"2\",\"event_id\":\"2\"," +
-            "\"ticket_count\":\"2\", \"payment_amount\":\"20\", \"reservation_date\":\"2023-04-11 15:10:10\"}";
 
-//    static String ticket1 = "{\"price\":\"10.00\",\"availability\":\"10\"," +
-//            "\"type\":\"VIP\"}";
-//
-//    static String ticket2 = "{\"price\":\"5.00\",\"availability\":\"20\"," +
-//            "\"type\":\"GeneralAdmission\"}";
+
+    static String ticket1 = "{\"price\":10.0,\"availability\":10,\"type\":\"VIP\"}";
+    static String ticket2 = "{\"price\":5.0,\"availability\":20,\"type\":\"GeneralAdmission\"}";
+
 }

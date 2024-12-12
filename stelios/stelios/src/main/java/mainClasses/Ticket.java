@@ -1,39 +1,50 @@
 package mainClasses;
 
 public class Ticket {
-    int Ticket_id, Availability;
-    Float Price;
-    String Type;
+    private int ticketId;
+    private int availability;
+    private Float price;
+    private String type;
 
-    public int getTicket_id() {
-        return Ticket_id;
+    public int getTicketId() {
+        return ticketId;
     }
 
-    public void setTicket_id(int ticket_id) {
-        Ticket_id = ticket_id;
+    public void setTicketId(int ticketId) {
+        this.ticketId = ticketId;
     }
 
     public int getAvailability() {
-        return Availability;
+        return availability;
     }
 
     public void setAvailability(int availability) {
-        Availability = availability;
+        this.availability = availability;
     }
 
     public Float getPrice() {
-        return Price;
+        return price;
     }
 
     public void setPrice(Float price) {
-        Price = price;
+        this.price = price;
     }
 
     public String getType() {
-        return Type;
+        return type;
     }
 
     public void setType(String type) {
-        Type = type;
+        this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return "Ticket{" +
+                "ticketId=" + ticketId +
+                ", availability=" + availability +
+                ", price=" + price +
+                ", type='" + type + '\'' +
+                '}';
     }
 }

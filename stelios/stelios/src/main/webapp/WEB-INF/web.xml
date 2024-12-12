@@ -57,9 +57,17 @@
         <servlet-name>CreateEvent</servlet-name>
         <servlet-class>servlets.CreateEvent</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>GetEvents</servlet-name>
+        <servlet-class>servlets.GetEvents</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>CreateCustomer</servlet-name>
         <url-pattern>/CreateCustomer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetEvents</servlet-name>
+        <url-pattern>/GetEvents</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>CreateEvent</servlet-name>
