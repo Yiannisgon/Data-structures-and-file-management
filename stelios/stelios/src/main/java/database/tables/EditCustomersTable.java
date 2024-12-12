@@ -77,14 +77,14 @@ public class EditCustomersTable {
         try {
             Connection con = DB_Connection.getConnection();
             Statement stmt = con.createStatement();
-
+            System.out.println("CUSTOMER BEING ADDED...\n" + "name " + customer.getName() + "email " + customer.getEmail() + "credit card details " + customer.getCreditCardDetails());
             String insertQuery = "INSERT INTO customers (name, email, credit_card_details) "
                     + "VALUES ("
                     + "'" + customer.getName() + "',"
                     + "'" + customer.getEmail() + "',"
                     + "'" + customer.getCreditCardDetails() + "'"
                     + ")";
-            System.out.println(insertQuery);
+            System.out.println("Insert query"+ insertQuery);
             stmt.executeUpdate(insertQuery);
             System.out.println("# The customer was successfully added to the database.");
 

@@ -33,7 +33,7 @@ function checkCredentials(event) {
     var password = document.getElementById('password').value;
 
     // Check for admin credentials
-    if (username === 'admin' && password === 'admin12*') {
+    if (username === 'admin' && password === '') {
         // Redirect to the admin page
         window.location.href = 'admin.html';
         return;

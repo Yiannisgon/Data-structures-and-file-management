@@ -49,6 +49,14 @@
         <servlet-name>DeleteDB</servlet-name>
         <servlet-class>servlets.DeleteDB</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CreateCustomer</servlet-name>
+        <servlet-class>servlets.CreateCustomer</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CreateCustomer</servlet-name>
+        <url-pattern>/CreateCustomer</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>GetOwner</servlet-name>
         <url-pattern>/GetOwner</url-pattern>

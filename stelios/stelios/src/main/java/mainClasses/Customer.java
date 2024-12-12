@@ -2,7 +2,7 @@ package mainClasses;
 
 public class Customer {
     int customerId;
-    String Name, Email, CreditCardDetails;
+    String name, email, credit_card_details;
 
     public int getCustomerId() {
         return customerId;
@@ -13,26 +13,26 @@ public class Customer {
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name; // Correctly assigns to the class field.
     }
 
     public String getEmail() {
-        return Email;
+        return email;
     }
 
     public void setEmail(String email) {
-        Email = email;
+        this.email = email; // Correctly assigns to the class field.
     }
 
     public String getCreditCardDetails() {
-        return CreditCardDetails;
+        return credit_card_details;
     }
 
     public void setCreditCardDetails(String creditCardDetails) {
-        CreditCardDetails = creditCardDetails;
+        this.credit_card_details = creditCardDetails; // Correctly assigns to the class field.
     }
 }
