@@ -43,8 +43,9 @@ function submitReservationAndCreate() {
 
         if (xhr.status === 200) {
             try {
+                // Extract customerId directly from the response
                 var response = JSON.parse(xhr.responseText);
-                var customerId = response.customer_id || response.customerId; // Handle both key names
+                var customerId = response.customer_id || response.customerId; // Handle both naming conventions
                 console.log("Fetched Customer ID:", customerId);
 
                 if (customerId > 0) {

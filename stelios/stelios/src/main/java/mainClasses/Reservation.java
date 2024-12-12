@@ -1,11 +1,17 @@
 package mainClasses;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.sql.Timestamp;
 
 public class Reservation {
     private int reservationId;
+    @SerializedName("customerID")
     private int customerId;
+
+    @SerializedName("eventID")
     private int eventId;
+
     private int ticketCount;
     private float paymentAmount;
     private Timestamp reservationDate;
