@@ -60,6 +60,16 @@ function showAllEvents() {
     toggleDisplay('eventListModal');
 }
 
+function toggleDisplay(elementId) {
+    var element = document.getElementById(elementId);
+    if (element.style.display === 'none' || element.style.display === '') {
+        element.style.display = 'block';
+    } else {
+        element.style.display = 'none';
+    }
+}
+
+
 function getEvents() {
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
@@ -74,10 +84,10 @@ function getEvents() {
             });
 
             // Update the #eventList div with the event data
-            $("#eventList").html(eventListContent);
+            document.getElementById("eventList").innerHTML = eventListContent;
         } else if (xhr.status !== 200) {
             // Handle errors here, such as displaying a message to the user
-            $("#eventList").html("Could not retrieve events data.");
+            document.getElementById("eventList").innerHTML = "Could not retrieve events data.";
         }
     };
 

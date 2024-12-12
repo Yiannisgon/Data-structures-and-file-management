@@ -1,8 +1,10 @@
 package database.tables;
 
+import com.google.gson.*;
 import mainClasses.Event;
-import com.google.gson.Gson;
 import database.DB_Connection;
+
+import java.lang.reflect.Type;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -114,20 +116,35 @@ public class EditEventsTable {
 
         try {
             ResultSet rs = stmt.executeQuery("SELECT * FROM events");
+
+            // Configure Gson with custom deserializer for time fields
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(Time.class, new JsonDeserializer<Time>() {
+                        @Override
+                        public Time deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                            try {
+                                return Time.valueOf(json.getAsString()); // Converts "HH:mm:ss" to java.sql.Time
+                            } catch (IllegalArgumentException e) {
+                                throw new JsonParseException("Invalid time format: " + json.getAsString(), e);
+                            }
+                        }
+                    })
+                    .setDateFormat("yyyy-MM-dd") // For date fields
+                    .create();
+
             while (rs.next()) {
                 String json = DB_Connection.getResultsToJSON(rs);
-                Gson gson = new Gson();
                 events.add(gson.fromJson(json, Event.class));
             }
         } catch (Exception e) {
-            System.err.println("Got an exception! ");
+            System.err.println("Got an exception while fetching events: ");
             System.err.println(e.getMessage());
+            e.printStackTrace();
         } finally {
             stmt.close();
         }
         return events;
     }
-
     public void deleteEvent(int eventId) throws ClassNotFoundException {
         try {
             Connection con = DB_Connection.getConnection();
