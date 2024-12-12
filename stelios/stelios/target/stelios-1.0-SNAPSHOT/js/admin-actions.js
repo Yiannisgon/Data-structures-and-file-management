@@ -312,15 +312,18 @@ function calculateEarnings(bookings) {
     return {keepersEarnings, appEarnings};
 }
 
-function CreateUser() {
-    return;
-}
-function CreateEvent() {
-    return;
-}
 function getAvailableTickets() {
     return;
 }
 function getEvents() {
     return;
+}
+
+function CreateUser() {
+    window.location.href = 'user_register.html'; // Change 'register.html' to your actual registration page URL
+}
+
+// Function to open the Create Event page
+function CreateEvent() {
+    window.open('new-event.html', '_blank'); // Opens in a new tab
 }
