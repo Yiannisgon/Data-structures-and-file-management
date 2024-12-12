@@ -157,4 +157,20 @@ public class EditEventsTable {
             Logger.getLogger(EditEventsTable.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    public void deleteEventById(String eventId) throws ClassNotFoundException {
+        try {
+            Connection con = DB_Connection.getConnection();
+            Statement stmt = con.createStatement();
+
+            String deleteQuery = "DELETE FROM events WHERE event_id = '" + eventId + "'";
+            System.out.println(deleteQuery);
+            stmt.executeUpdate(deleteQuery);
+            System.out.println("# The event was successfully deleted from the database.");
+
+            stmt.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(EditEventsTable.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
 }

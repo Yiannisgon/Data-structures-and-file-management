@@ -61,6 +61,30 @@
         <servlet-name>GetEvents</servlet-name>
         <servlet-class>servlets.GetEvents</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>GetCustomerByEmail</servlet-name>
+        <servlet-class>servlets.GetCustomerByEmail</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CreateReservation</servlet-name>
+        <servlet-class>servlets.CreateReservation</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteEvent</servlet-name>
+        <servlet-class>servlets.DeleteEvent</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DeleteEvent</servlet-name>
+        <url-pattern>/DeleteEvent</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateReservation</servlet-name>
+        <url-pattern>/CreateReservation</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetCustomerByEmail</servlet-name>
+        <url-pattern>/GetCustomerByEmail</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>CreateCustomer</servlet-name>
         <url-pattern>/CreateCustomer</url-pattern>

@@ -7,11 +7,11 @@
 
 /* Set the background image for the body */
 body {
-    background-image: url('../img/photo-1623387641168-d9803ddd3f35.jfif');
+    /*background-image: url('../img/photo-1623387641168-d9803ddd3f35.jfif');*/
     background-size: cover;
     background-position: center;
     font-family: Arial, sans-serif;
-    color: #fff; 
+    color: black;
 }
 
 /* Center the form container */

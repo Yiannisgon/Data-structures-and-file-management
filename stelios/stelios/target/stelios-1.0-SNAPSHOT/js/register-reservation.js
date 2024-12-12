@@ -1,54 +1,114 @@
-function submitReservationForm() {
+function submitReservationAndCreate() {
     // Collect form data
     var formData = {
         "ticketCount": parseInt(document.getElementById("ticketCount").value),
-        "reservationDate": document.getElementById("reservationDate").value.trim(),
+        "reservationDate": formatDateTime(document.getElementById("reservationDate").value),
         "paymentAmount": parseFloat(document.getElementById("paymentAmount").value),
-        "customerID": parseInt(document.getElementById("customerID").value),
+        "customerEmail": document.getElementById("customerEmail").value.trim(),
         "eventID": parseInt(document.getElementById("eventID").value)
     };
 
     // Validate form data
-    if (!formData.ticketCount || !formData.reservationDate || isNaN(formData.paymentAmount) || !formData.customerID || !formData.eventID) {
-        alert("All fields are required and must be valid!");
-        return;
-    }
-
-    if (isNaN(formData.ticketCount) || formData.ticketCount <= 0) {
+    if (!formData.ticketCount || isNaN(formData.ticketCount) || formData.ticketCount <= 0) {
         alert("Ticket count must be a positive number!");
         return;
     }
 
-    if (isNaN(formData.paymentAmount) || formData.paymentAmount <= 0) {
+    if (!formData.reservationDate) {
+        alert("Reservation date is required!");
+        return;
+    }
+
+    if (!formData.paymentAmount || isNaN(formData.paymentAmount) || formData.paymentAmount <= 0) {
         alert("Payment amount must be a positive number!");
         return;
     }
 
-    // Log the form data for debugging
-    console.log("Form Data:", formData);
+    if (!formData.customerEmail) {
+        alert("Customer email is required!");
+        return;
+    }
 
-    // Initialize XMLHttpRequest for form submission
+    if (!formData.eventID || isNaN(formData.eventID)) {
+        alert("Please select a valid event!");
+        return;
+    }
+
+    // Fetch the customer ID using the email
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'CreateReservation', true); // Adjusted endpoint for reservation creation
+    xhr.open('GET', `GetCustomerByEmail?email=${encodeURIComponent(formData.customerEmail)}`, true);
+    xhr.onload = function () {
+        console.log("GetCustomerByEmail response status:", xhr.status);
+        console.log("GetCustomerByEmail response text:", xhr.responseText);
+
+        if (xhr.status === 200) {
+            try {
+                var response = JSON.parse(xhr.responseText);
+                var customerId = response.customer_id || response.customerId; // Handle both key names
+                console.log("Fetched Customer ID:", customerId);
+
+                if (customerId > 0) {
+                    // Add customer ID to the form data
+                    formData.customerID = customerId;
+                    console.log("Form Data with Customer ID:", formData);
+
+                    // Proceed to create the reservation
+                    createReservation(formData);
+                } else {
+                    alert("No valid customer found with the provided email.");
+                }
+            } catch (e) {
+                console.error("Error parsing customer JSON:", e);
+                alert("An error occurred while processing customer data.");
+            }
+        } else if (xhr.status === 404) {
+            alert("Error: Customer not found.");
+        } else {
+            alert(`Error fetching customer data: ${xhr.responseText}`);
+        }
+    };
+
+    xhr.onerror = function () {
+        console.error("Request failed for GetCustomerByEmail.");
+        alert("An error occurred while trying to fetch customer data.");
+    };
+
+    xhr.send();
+}
+
+function createReservation(formData) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'CreateReservation', true);
     xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
 
-    // Define what happens on successful data submission
-    xhr.onload = function() {
+    xhr.onload = function () {
+        console.log("CreateReservation response status:", xhr.status);
+        console.log("CreateReservation response text:", xhr.responseText);
+
         if (xhr.status === 200) {
             alert("Reservation successfully created");
             console.log("Response JSON:", xhr.responseText);
         } else {
-            alert("An error occurred: " + xhr.responseText);
-            console.error("Error response:", xhr.responseText);
+            alert(`An error occurred while creating the reservation: ${xhr.responseText}`);
         }
     };
 
-    // Print the JSON being sent
-    console.log("Sending JSON:", JSON.stringify(formData));
+    xhr.onerror = function () {
+        console.error("Request failed for CreateReservation.");
+        alert("An error occurred while trying to create the reservation.");
+    };
 
-    // Send collected data as JSON
+    console.log("Sending JSON:", JSON.stringify(formData));
     xhr.send(JSON.stringify(formData));
 }
+
+// Function to format date and time to 'YYYY-MM-DD HH:mm:ss'
+function formatDateTime(dateTime) {
+    if (!dateTime) return null;
+    const [date, time] = dateTime.split("T");
+    return `${date} ${time}:00`;
+}
+
 function closeModal() {
     // Close the modal
     const modal = document.getElementById('userListModal');
@@ -69,7 +129,6 @@ function toggleDisplay(elementId) {
     }
 }
 
-
 function getEvents() {
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
@@ -79,7 +138,7 @@ function getEvents() {
 
             // Create HTML content for each event using createTableEvent function
             var eventListContent = '';
-            events.forEach(function(event) {
+            events.forEach(function (event) {
                 eventListContent += createTableEvent(event);
             });
 
@@ -116,4 +175,32 @@ function createTableEvent(event) {
 
     html += '</table>';
     return html;
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    populateEventDropdown();
+});
+
+function populateEventDropdown() {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var events = JSON.parse(xhr.responseText);
+
+            // Populate the dropdown
+            var eventDropdown = document.getElementById("eventID");
+            events.forEach(function (event) {
+                var option = document.createElement("option");
+                option.value = event.event_id;
+                option.textContent = event.name + " (" + event.date + ")";
+                eventDropdown.appendChild(option);
+            });
+        } else if (xhr.status !== 200) {
+            console.error("Error retrieving events:", xhr.responseText);
+        }
+    };
+
+    xhr.open('GET', 'GetEvents');
+    xhr.setRequestHeader('Content-type', 'application/json');
+    xhr.send();
 }

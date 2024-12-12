@@ -8,7 +8,7 @@
     <title>New Reservation</title>
 </head>
 <body>
-<form action="/submit-reservation" method="POST">
+<form action="#" method="post" onsubmit="return false;">
     <div class="container">
         <h2>Make a New Reservation</h2>
         <label for="ticketCount">Ticket Count:</label>
@@ -20,13 +20,17 @@
         <label for="paymentAmount">Payment Amount:</label>
         <input type="number" id="paymentAmount" name="paymentAmount" step="0.01" required>
 
-        <label for="customerID">Customer ID:</label>
-        <input type="number" id="customerID" name="customerID" required>
+        <label for="customerEmail">Customer Email:</label>
+        <input type="email" id="customerEmail" name="customerEmail" required>
 
-        <label for="eventID">Event ID:</label>
-        <input type="number" id="eventID" name="eventID" required>
+        <label for="eventID">Event:</label>
+        <select id="eventID" name="eventID" required>
+            <option value="" disabled selected>Select an event</option>
+        </select>
 
-        <button type="submit" onclick="submitReservationForm()">Submit Reservation</button>
+
+
+        <button type="submit" onclick="submitReservationAndCreate()">Submit Reservation</button>
     </div>
 
 </form>

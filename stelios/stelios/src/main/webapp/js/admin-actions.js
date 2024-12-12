@@ -315,15 +315,96 @@ function calculateEarnings(bookings) {
 function getAvailableTickets() {
     return;
 }
-function getEvents() {
-    return;
-}
 
 function CreateUser() {
     window.location.href = 'user_register.html'; // Change 'register.html' to your actual registration page URL
 }
 
+function showAllEvents() {
+    getEvents();
+    toggleDisplay('eventListModal');
+}
+
+function toggleDisplay(elementId) {
+    var element = document.getElementById(elementId);
+    if (element.style.display === 'none' || element.style.display === '') {
+        element.style.display = 'block';
+    } else {
+        element.style.display = 'none';
+    }
+}
+
+
+function getEvents() {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            // Parse the JSON response
+            var events = JSON.parse(xhr.responseText);
+
+            // Create HTML content for each event using createTableEvent function
+            var eventListContent = '';
+            events.forEach(function(event) {
+                eventListContent += createTableEvent(event);
+            });
+
+            // Update the #eventList div with the event data
+            document.getElementById("eventList").innerHTML = eventListContent;
+        } else if (xhr.status !== 200) {
+            // Handle errors here, such as displaying a message to the user
+            document.getElementById("eventList").innerHTML = "Could not retrieve events data.";
+        }
+    };
+
+    xhr.open('GET', 'GetEvents');
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xhr.send();
+}
+
 // Function to open the Create Event page
 function CreateEvent() {
     window.open('new-event.html', '_blank'); // Opens in a new tab
+}
+
+function createTableEvent(event) {
+    var html = '<table>';
+    html += '<tr><th colspan="2">' + event.name + '</th></tr>';
+
+    // Add event_id if present
+    if (event.hasOwnProperty('event_id') && event.event_id !== null) {
+        html += '<tr><td>Event ID</td><td>' + event.event_id + '</td></tr>';
+    }
+
+    // Include keys and their values dynamically
+    var includeKeys = ['name', 'capacity', 'date', 'time', 'type'];
+    includeKeys.forEach(function(key) {
+        if (event.hasOwnProperty(key) && event[key] !== null) {
+            var value = event[key];
+            html += '<tr><td>' + key.charAt(0).toUpperCase() + key.slice(1) + '</td><td>' + value + '</td></tr>';
+        }
+    });
+
+    // Add delete event button with event_id
+    html += '<tr><td colspan="2"><button onclick="deleteEvent(' + event.event_id + ')">Delete Event</button></td></tr>';
+    html += '</table><br>';
+    return html;
+}
+
+function deleteEvent(eventId) {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log("Event deleted: " + eventId);
+            // After successful deletion, refresh the event list
+            getEvents();
+        } else if (xhr.status !== 200) {
+            console.error("Error deleting event: " + eventId);
+        }
+    };
+
+    // Adjust the URL to include event ID
+    var url = 'DeleteEvent?id=' + eventId;
+    xhr.open('GET', url);
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xhr.send();
 }

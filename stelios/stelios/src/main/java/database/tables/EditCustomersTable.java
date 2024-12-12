@@ -3,10 +3,8 @@ package database.tables;
 import mainClasses.Customer;
 import com.google.gson.Gson;
 import database.DB_Connection;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -127,4 +125,40 @@ public class EditCustomersTable {
             Logger.getLogger(EditCustomersTable.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    public Customer getCustomerByEmail(String email) throws SQLException, ClassNotFoundException {
+        if (email == null || email.trim().isEmpty()) {
+            System.err.println("Email parameter is null or empty.");
+            return null;
+        }
+
+        String query = "SELECT * FROM customers WHERE LOWER(email) = LOWER(?)";
+
+        try (Connection con = DB_Connection.getConnection();
+             PreparedStatement pstmt = con.prepareStatement(query)) {
+
+            pstmt.setString(1, email.trim());
+            System.out.println("Executing query: " + pstmt);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    String json = DB_Connection.getResultsToJSON(rs);
+                    System.out.println("Customer found: " + json);
+                    Gson gson = new Gson();
+                    return gson.fromJson(json, Customer.class);
+                } else {
+                    System.out.println("No customer found with email: " + email.trim());
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("SQL Exception occurred while fetching customer by email: " + e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            System.err.println("An exception occurred: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
 }
