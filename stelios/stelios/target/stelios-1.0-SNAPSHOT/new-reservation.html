@@ -1,39 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/style.css">
-  <title>Event Reservation</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+
+    <title>New Reservation</title>
 </head>
 <body>
-<div class="container">
-  <h1>Event Reservation</h1>
-  <form action="#" method="post" onsubmit="return false;">
-    <label for="event-select">Choose Event:</label>
-    <select id="event-select" name="event_id" required>
-      <option value="">Select an event</option>
-      <!-- Events will be dynamically loaded here -->
-    </select>
+<form action="/submit-reservation" method="POST">
+    <div class="container">
+        <h2>Make a New Reservation</h2>
+        <label for="ticketCount">Ticket Count:</label>
+        <input type="number" id="ticketCount" name="ticketCount" min="1" required>
 
-    <label for="ticket-count">Number of Tickets:</label>
-    <input type="number" id="ticket-count" name="ticket_count" min="1" required>
+        <label for="reservationDate">Reservation Date:</label>
+        <input type="datetime-local" id="reservationDate" name="reservationDate" required>
 
-    <label for="reservation-date">Reservation Date:</label>
-    <input type="date" id="reservation-date" name="reservation_date" required>
+        <label for="paymentAmount">Payment Amount:</label>
+        <input type="number" id="paymentAmount" name="paymentAmount" step="0.01" required>
 
-    <label for="reservation-time">Reservation Time:</label>
-    <input type="time" id="reservation-time" name="reservation_time" required>
+        <label for="customerID">Customer ID:</label>
+        <input type="number" id="customerID" name="customerID" required>
 
-    <label for="payment-amount">Payment Amount:</label>
-    <input type="number" id="payment-amount" name="payment_amount" step="0.01" min="0" required>
+        <label for="eventID">Event ID:</label>
+        <input type="number" id="eventID" name="eventID" required>
 
-    <br>
-    <input type="button" id="reserve-button" value="Reserve" onclick="submitReservation()">
-  </form>
-</div>
+        <button type="submit">Submit Reservation</button>
+    </div>
 
-<script src="js/register-reservation.js"></script>
-
+</form>
 </body>
 </html>

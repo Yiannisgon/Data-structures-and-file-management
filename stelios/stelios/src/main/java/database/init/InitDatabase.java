@@ -134,8 +134,10 @@ public class InitDatabase {
         editEvents.addEventFromJSON(Resources.event2);
 
         EditReservationsTable editReservations = new EditReservationsTable();
-//        editReservations.addReservationFromJSON(Resources.reservation1);
-//        editReservations.addReservationFromJSON(Resources.reservation2);
+        System.out.println("adding reservation1");
+        editReservations.addReservationFromJSON(Resources.reservation1);
+        System.out.println("adding reservation2");
+        editReservations.addReservationFromJSON(Resources.reservation2);
 
         EditTicketsTable editTickets = new EditTicketsTable();
 //        editTickets.addTicketFromJSON(Resources.ticket1);
