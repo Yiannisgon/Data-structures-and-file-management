@@ -57,23 +57,23 @@ public class InitDatabase {
     }
 
     public void initTables() throws SQLException, ClassNotFoundException {
-        EditPetOwnersTable eut = new EditPetOwnersTable();
-        eut.createPetOwnersTable();
+        //EditPetOwnersTable eut = new EditPetOwnersTable();
+        //eut.createPetOwnersTable();
 
-        EditPetKeepersTable editkeepers = new EditPetKeepersTable();
-        editkeepers.createPetKeepersTable();
+        //EditPetKeepersTable editkeepers = new EditPetKeepersTable();
+        //editkeepers.createPetKeepersTable();
 
-        EditPetsTable editpets = new EditPetsTable();
-        editpets.createPetsTable();
+        //EditPetsTable editpets = new EditPetsTable();
+        //editpets.createPetsTable();
 
-        EditBookingsTable editBookings = new EditBookingsTable();
-        editBookings.createBookingTable();
-
-        EditReviewsTable editRevs = new EditReviewsTable();
-        editRevs.createReviewTable();
-
-        EditMessagesTable editMsgs = new EditMessagesTable();
-        editMsgs.createMessageTable();
+//        EditBookingsTable editBookings = new EditBookingsTable();
+//        editBookings.createBookingTable();
+//
+//        EditReviewsTable editRevs = new EditReviewsTable();
+//        editRevs.createReviewTable();
+//
+//        EditMessagesTable editMsgs = new EditMessagesTable();
+//        editMsgs.createMessageTable();
 
         // New Classes
         EditCustomersTable editCustomers = new EditCustomersTable();
