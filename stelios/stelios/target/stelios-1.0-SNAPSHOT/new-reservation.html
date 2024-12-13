@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/reserve.css">
     <title>New Reservation</title>
 </head>
+
 <body>
-<form action="#" method="post" onsubmit="return false;">
-    <div class="container">
+<div class="container">
+    <!-- New Reservation Form -->
+    <form action="#" method="post" onsubmit="return false;">
         <h2>Make a New Reservation</h2>
+        <br>
 
         <label for="eventID">Event:</label>
         <select id="eventID" name="eventID" onchange="onEventChange()" required>
@@ -31,27 +35,30 @@
         <input type="number" id="ticketCount" name="ticketCount" min="1" oninput="updatePrice()" required>
 
         <p><strong>Total Price:</strong> $<span id="totalPrice">0.00</span></p>
-        <p id="balanceError" style="color: red;"></p>
+        <p id="balanceError"></p>
 
         <label for="customerEmail">Customer Email:</label>
         <input type="email" id="customerEmail" name="customerEmail" required>
 
         <button type="submit" onclick="submitReservationAndCreate()">Submit Reservation</button>
-    </div>
-</form>
+    </form>
 
-<div class="container">
-    <h2>Cancel a Reservation</h2>
+    <!-- Cancel Reservation Section -->
+    <div class="cancel-section">
+        <h2>Cancel a Reservation</h2>
 
-    <label for="cancelReservationEmail">Customer Email:</label>
-    <input type="email" id="cancelReservationEmail" name="customerEmail" required>
+        <label for="cancelReservationEmail">Customer Email:</label>
+        <input type="email" id="cancelReservationEmail" name="customerEmail" required>
 
-    <button type="button" onclick="getReservationsByEmail()">Show My Reservations</button>
+        <button type="button" onclick="getReservationsByEmail()">Show My Reservations</button>
 
-    <div id="reservationListContainer">
-        <!-- Reservations will be displayed here -->
+        <div id="reservationListContainer">
+            <!-- Reservations will be displayed here -->
+        </div>
     </div>
 </div>
+
 <script src="js/register-reservation.js"></script>
 </body>
+
 </html>

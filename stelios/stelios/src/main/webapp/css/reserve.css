@@ -13,56 +13,63 @@ body {
     line-height: 1.6;
     background-size: cover;
     background-attachment: fixed;
+    font-size: 16px;
 }
 
 .container {
     width: 80%;
-    margin: auto;
+    max-width: 900px;
+    margin: 30px auto;
     overflow: hidden;
-    background: rgba(255, 255, 255, 0.8);
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.9);
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 h1, h2 {
     color: #333;
     margin-bottom: 20px;
     text-align: center;
+    font-size: 24px;
 }
 
-/* Form Styles */
 form {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Two equal columns */
-    grid-gap: 15px;
+    grid-template-columns: 1fr 1fr; /* Two equal columns */
+    gap: 20px;
     padding: 20px;
     background: #e9ecef;
-    border-radius: 5px;
+    border-radius: 8px;
 }
 
 form label {
     font-weight: bold;
+    font-size: 14px;
+    color: #555;
 }
 
 form input, form select {
-    padding: 10px;
+    padding: 12px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    width: 100%; /* Ensure inputs take full width */
+    font-size: 14px;
+    width: 100%;
+    background-color: #fff;
 }
 
 form input[type="number"] {
-    max-width: 150px; /* Adjust width for numbers */
+    max-width: 180px;
 }
 
 form button {
-    padding: 10px;
+    padding: 12px 20px;
     border: none;
     background-color: #0275d8;
     color: white;
     border-radius: 5px;
     cursor: pointer;
+    font-size: 16px;
     grid-column: span 2; /* Span full width of form */
     justify-self: center;
 }
@@ -72,8 +79,8 @@ form button:hover {
 }
 
 p {
-    margin: 10px 0;
-    text-align: center; /* Align messages in the center */
+    margin: 15px 0;
+    text-align: center;
 }
 
 p strong {
@@ -81,13 +88,34 @@ p strong {
 }
 
 #eventDateTime {
-    grid-column: span 2; /* Take up full width */
-    text-align: center; /* Center the content */
+    grid-column: span 2;
+    text-align: center;
+    font-size: 14px;
+    color: #333;
 }
 
 #balanceError {
     grid-column: span 2;
     text-align: center;
     font-size: 0.9em;
-    color: red; /* Make errors red for visibility */
+    color: #d9534f; /* Use a red shade for errors */
+}
+
+/* Adjust styles for Cancel Reservation section */
+.container:last-child {
+    background-color: rgba(255, 255, 255, 0.9);
+    margin-top: 40px;
+}
+
+#reservationListContainer {
+    margin-top: 20px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+/* Hover effect for input fields */
+form input[type="email"]:hover, form input[type="number"]:hover, form select:hover {
+    border-color: #0275d8;
 }
