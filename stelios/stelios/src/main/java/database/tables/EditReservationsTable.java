@@ -15,6 +15,13 @@ import java.util.logging.Logger;
 
 public class EditReservationsTable {
 
+    // Global variable to track the total refund tax withheld
+    private static float totalRefundTax = 0.0f;
+
+    public static float getTotalRefundTax() {
+        return totalRefundTax;
+    }
+
     public void addReservationFromJSON(String json) throws ClassNotFoundException {
         System.out.println("Starting to add reservation from JSON...");
         System.out.println("Received JSON: " + json);
@@ -250,15 +257,25 @@ public class EditReservationsTable {
                         int customerId = rs.getInt("customer_id");
                         float paymentAmount = rs.getFloat("payment_amount");
 
-                        // Step 2: Refund the amount to the customer's balance
+                        // Step 2: Calculate the refund tax (e.g., 10%)
+                        float refundTaxRate = 0.10f; // 10% refund tax
+                        float refundTax = paymentAmount * refundTaxRate;
+                        float refundAmount = paymentAmount - refundTax;
+
+                        // Update the global refund tax tracker
+                        totalRefundTax += refundTax;
+
+                        // Step 3: Refund the remaining amount to the customer's balance
                         String refundQuery = "UPDATE customers SET balance = balance + ? WHERE customer_id = ?";
                         try (PreparedStatement refundStmt = con.prepareStatement(refundQuery)) {
-                            refundStmt.setFloat(1, paymentAmount);
+                            refundStmt.setFloat(1, refundAmount);
                             refundStmt.setInt(2, customerId);
                             int affectedRows = refundStmt.executeUpdate();
 
                             if (affectedRows > 0) {
-                                System.out.println("Refunded " + paymentAmount + " to customer ID: " + customerId);
+                                System.out.println("Refunded " + refundAmount + " to customer ID: " + customerId);
+                                System.out.println("Withheld refund tax: " + refundTax);
+                                System.out.println("Total refund tax withheld: " + totalRefundTax);
                             } else {
                                 System.err.println("Failed to refund to customer ID: " + customerId);
                             }
@@ -270,7 +287,7 @@ public class EditReservationsTable {
                 }
             }
 
-            // Step 3: Delete the reservation
+            // Step 4: Delete the reservation
             pstmt.setString(1, reservationId);
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -284,4 +301,5 @@ public class EditReservationsTable {
             throw new RuntimeException("Error deleting the reservation from the database: " + ex.getMessage());
         }
     }
+
 }
