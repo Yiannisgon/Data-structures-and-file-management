@@ -185,15 +185,15 @@ public class Resources {
             + "\"reviewScore\":\"5\"}";
 
          //new examples
-         static String customer1 = "{\"name\":\"John Doe\",\"email\":\"john.doe@example.com\",\"credit_card_details\":\"4111111111111111\"}";
-    static String customer2 = "{\"name\":\"Yo Mama\",\"email\":\"yo.mum@example.com\",\"credit_card_details\":\"4111111111111999\"}";
+         static String customer1 = "{\"name\":\"John Doe\",\"email\":\"john.doe@example.com\",\"credit_card_details\":\"4111111111111111\",\"balance\":50.0}";
+    static String customer2 = "{\"name\":\"Yo Mama\",\"email\":\"yo.mum@example.com\",\"credit_card_details\":\"4111111111111999\",\"balance\":50.0}";
 
 
     static String event1 = "{\"name\":\"Movie Festival\",\"capacity\":10,\"date\":\"Dec 20, 2024\",\"time\":\"01:00:00 PM\",\"type\":\"Theater\"}";
     static String event2 = "{\"name\":\"Disco Festival\",\"capacity\":100,\"date\":\"Dec 25, 2024\",\"time\":\"02:00:00 PM\",\"type\":\"Concert\"}";
 
-    static String reservation1 = "{\"customerId\":1,\"eventId\":1,\"ticketCount\":1,\"paymentAmount\":1.00,\"reservationDate\":\"2023-08-11T16:10:10Z\n\"}";
-    static String reservation2 = "{\"customerId\":2,\"eventId\":1,\"ticketCount\":1,\"paymentAmount\":2.00,\"reservationDate\":\"2023-08-11T16:10:10Z\n\"}";
+    static String reservation1 = "{\"customerID\":1,\"eventID\":1,\"ticketCount\":1,\"paymentAmount\":1.00,\"reservationDate\":\"2023-08-11T16:10:10Z\n\"}";
+    static String reservation2 = "{\"customerID\":2,\"eventID\":1,\"ticketCount\":1,\"paymentAmount\":2.00,\"reservationDate\":\"2023-08-11T16:10:10Z\n\"}";
 
     static String ticket1 = "{\"price\":10.0,\"availability\":10,\"type\":\"VIP\",\"event_id\":1}";
     static String ticket2 = "{\"price\":5.0,\"availability\":20,\"type\":\"GeneralAdmission\",\"event_id\":1}";

@@ -3,35 +3,35 @@ package database.tables;
 import mainClasses.Reservation;
 import com.google.gson.Gson;
 import database.DB_Connection;
+
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class EditReservationsTable {
 
     public void addReservationFromJSON(String json) throws ClassNotFoundException {
-        System.out.println("hoy");
+        System.out.println("Starting to add reservation from JSON...");
+        System.out.println("Received JSON: " + json);
         Reservation reservation = jsonToReservation(json);
-        System.out.println("Parsed Reservation: " + reservation);
-        System.out.println("hey");
-        addReservation(reservation);
+        if (reservation != null) {
+            System.out.println("Parsed Reservation: " + reservationToJSON(reservation));
+            addReservation(reservation);
+        } else {
+            System.err.println("Failed to parse reservation JSON.");
+        }
     }
-
 
     public Reservation jsonToReservation(String json) {
         Gson gson = new Gson();
-        Reservation reservation = null;
-
         try {
-            reservation = gson.fromJson(json, Reservation.class);
-            System.out.println("JSON successfully parsed to Reservation object.");
+            Reservation reservation = gson.fromJson(json, Reservation.class);
+            System.out.println("JSON successfully parsed to Reservation object: " + reservationToJSON(reservation));
+            return reservation;
         } catch (Exception e) {
             System.err.println("Error parsing JSON to Reservation: " + e.getMessage());
             e.printStackTrace();
+            return null;
         }
-
-        return reservation;
     }
 
     public String reservationToJSON(Reservation reservation) {
@@ -40,31 +40,34 @@ public class EditReservationsTable {
     }
 
     public void createReservationsTable() throws SQLException, ClassNotFoundException {
-        Connection con = DB_Connection.getConnection();
-        Statement stmt = con.createStatement();
-
-        String query = "CREATE TABLE reservations ("
-                + "reservation_id INTEGER NOT NULL AUTO_INCREMENT, "
-                + "customer_id INTEGER NOT NULL, "
-                + "event_id INTEGER NOT NULL, "
-                + "ticket_count INTEGER NOT NULL, "
-                + "payment_amount FLOAT NOT NULL, "
-                + "reservation_date TIMESTAMP NOT NULL, "
-                + "PRIMARY KEY (reservation_id), "
-                + "FOREIGN KEY (customer_id) REFERENCES customers(customer_id) "
-                + "ON DELETE CASCADE ON UPDATE CASCADE, "
-                + "FOREIGN KEY (event_id) REFERENCES events(event_id) "
-                + "ON DELETE CASCADE ON UPDATE CASCADE"
-                + ")";
-
-        stmt.execute(query);
-        stmt.close();
+        try (Connection con = DB_Connection.getConnection(); Statement stmt = con.createStatement()) {
+            String query = "CREATE TABLE reservations ("
+                    + "reservation_id INTEGER NOT NULL AUTO_INCREMENT, "
+                    + "customer_id INTEGER NOT NULL, "
+                    + "event_id INTEGER NOT NULL, "
+                    + "ticket_count INTEGER NOT NULL, "
+                    + "payment_amount FLOAT NOT NULL, "
+                    + "reservation_date TIMESTAMP NOT NULL, "
+                    + "PRIMARY KEY (reservation_id), "
+                    + "FOREIGN KEY (customer_id) REFERENCES customers(customer_id) "
+                    + "ON DELETE CASCADE ON UPDATE CASCADE, "
+                    + "FOREIGN KEY (event_id) REFERENCES events(event_id) "
+                    + "ON DELETE CASCADE ON UPDATE CASCADE"
+                    + ")";
+            stmt.execute(query);
+            System.out.println("Reservations table created successfully.");
+        }
     }
 
     public void addReservation(Reservation reservation) throws ClassNotFoundException {
-        Connection con = null;
-        try {
-            con = DB_Connection.getConnection();
+        if (reservation == null) {
+            throw new IllegalArgumentException("Reservation object cannot be null.");
+        }
+
+        System.out.println("Adding reservation: " + reservationToJSON(reservation));
+        validateReservation(reservation);
+
+        try (Connection con = DB_Connection.getConnection()) {
             con.setAutoCommit(false); // Start transaction
 
             // Insert reservation
@@ -76,7 +79,7 @@ public class EditReservationsTable {
                 pstmt.setFloat(4, reservation.getPaymentAmount());
                 pstmt.setTimestamp(5, reservation.getReservationDate());
                 pstmt.executeUpdate();
-                System.out.println("# The reservation was successfully added to the database.");
+                System.out.println("Reservation successfully added for Customer ID: " + reservation.getCustomerId());
             }
 
             // Deduct payment amount from customer's balance
@@ -88,48 +91,54 @@ public class EditReservationsTable {
                 if (affectedRows == 0) {
                     throw new SQLException("Failed to update balance: Customer ID not found.");
                 }
+                System.out.println("Balance successfully updated for Customer ID: " + reservation.getCustomerId());
             }
 
             con.commit(); // Commit transaction
+            System.out.println("Transaction committed successfully for reservation: " + reservationToJSON(reservation));
         } catch (SQLException ex) {
-            if (con != null) {
-                try {
-                    con.rollback(); // Rollback transaction on failure
-                } catch (SQLException rollbackEx) {
-                    System.err.println("Rollback failed: " + rollbackEx.getMessage());
-                }
-            }
-            throw new RuntimeException("Error adding reservation or updating balance: " + ex.getMessage(), ex);
-        } finally {
-            if (con != null) {
-                try {
-                    con.setAutoCommit(true);
-                    con.close();
-                } catch (SQLException closeEx) {
-                    System.err.println("Failed to close connection: " + closeEx.getMessage());
-                }
-            }
+            System.err.println("Error adding reservation or updating balance: " + ex.getMessage());
+            throw new RuntimeException("Database error: " + ex.getMessage(), ex);
         }
     }
 
     public ArrayList<Reservation> getAllReservations() throws SQLException, ClassNotFoundException {
-        Connection con = DB_Connection.getConnection();
-        Statement stmt = con.createStatement();
         ArrayList<Reservation> reservations = new ArrayList<>();
+        String query = "SELECT * FROM reservations";
 
-        try {
-            ResultSet rs = stmt.executeQuery("SELECT * FROM reservations");
+        try (Connection con = DB_Connection.getConnection();
+             Statement stmt = con.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+
             while (rs.next()) {
                 String json = DB_Connection.getResultsToJSON(rs);
-                Gson gson = new Gson();
-                reservations.add(gson.fromJson(json, Reservation.class));
+                Reservation reservation = jsonToReservation(json);
+                if (reservation != null) {
+                    reservations.add(reservation);
+                    System.out.println("Retrieved Reservation: " + reservationToJSON(reservation));
+                }
             }
-        } catch (Exception e) {
-            System.err.println("Got an exception! ");
-            System.err.println(e.getMessage());
-        } finally {
-            stmt.close();
         }
         return reservations;
+    }
+
+    private void validateReservation(Reservation reservation) {
+        System.out.println("Validating reservation: " + reservationToJSON(reservation));
+
+        if (reservation.getCustomerId() <= 0) {
+            throw new IllegalArgumentException("Invalid Customer ID: " + reservation.getCustomerId());
+        }
+        if (reservation.getEventId() <= 0) {
+            throw new IllegalArgumentException("Invalid Event ID: " + reservation.getEventId());
+        }
+        if (reservation.getTicketCount() <= 0) {
+            throw new IllegalArgumentException("Ticket count must be greater than 0.");
+        }
+        if (reservation.getPaymentAmount() <= 0) {
+            throw new IllegalArgumentException("Payment amount must be greater than 0.");
+        }
+        if (reservation.getReservationDate() == null) {
+            throw new IllegalArgumentException("Reservation date cannot be null.");
+        }
     }
 }

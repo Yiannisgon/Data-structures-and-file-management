@@ -68,6 +68,8 @@ public class EditCustomersTable {
                 + "credit_card_details VARCHAR(100), "
                 + "balance FLOAT DEFAULT 0.0, " // Balance as FLOAT
                 + "PRIMARY KEY (customer_id))";
+
+
         stmt.execute(query);
         stmt.close();
     }
