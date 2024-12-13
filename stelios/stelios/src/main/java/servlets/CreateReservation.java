@@ -1,5 +1,6 @@
 package servlets;
 
+import database.tables.EditCustomersTable;
 import database.tables.EditReservationsTable;
 import mainClasses.Reservation;
 import com.google.gson.Gson;
@@ -17,7 +18,6 @@ import java.io.PrintWriter;
 import java.sql.Timestamp;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 @WebServlet(name = "CreateReservation", urlPatterns = {"/CreateReservation"})
 public class CreateReservation extends HttpServlet {
 
@@ -26,7 +26,6 @@ public class CreateReservation extends HttpServlet {
         System.out.println("Opened CreateReservation");
         response.setContentType("application/json;charset=UTF-8");
 
-        // Read JSON from request
         StringBuilder sb = new StringBuilder();
         String line;
         try {
@@ -37,7 +36,6 @@ public class CreateReservation extends HttpServlet {
         } catch (IOException e) {
             response.setStatus(400); // Bad request
             response.getWriter().write("Error reading input: " + e.getMessage());
-            System.err.println("Error reading input: " + e.getMessage());
             return;
         }
 
@@ -57,24 +55,7 @@ public class CreateReservation extends HttpServlet {
                     .create();
 
             // Parse JSON to Reservation object
-            Reservation newReservation;
-            try {
-                newReservation = gson.fromJson(requestData, Reservation.class);
-                System.out.println("JSON parsed successfully.");
-            } catch (Exception e) {
-                System.err.println("Error during JSON parsing: " + e.getMessage());
-                response.setStatus(400);
-                response.getWriter().write("Invalid JSON format: " + e.getMessage());
-                return;
-            }
-
-            // Debug log parsed Reservation
-            System.out.println("Parsed Reservation Details:");
-            System.out.println("Customer ID: " + newReservation.getCustomerId());
-            System.out.println("Event ID: " + newReservation.getEventId());
-            System.out.println("Ticket Count: " + newReservation.getTicketCount());
-            System.out.println("Payment Amount: " + newReservation.getPaymentAmount());
-            System.out.println("Reservation Date: " + newReservation.getReservationDate());
+            Reservation newReservation = gson.fromJson(requestData, Reservation.class);
 
             // Validate fields
             if (newReservation.getCustomerId() <= 0 ||
@@ -82,27 +63,37 @@ public class CreateReservation extends HttpServlet {
                     newReservation.getTicketCount() <= 0 ||
                     newReservation.getPaymentAmount() <= 0 ||
                     newReservation.getReservationDate() == null) {
-                System.err.println("Validation failed: Missing or invalid required fields.");
                 response.setStatus(400); // Bad request
-                response.getWriter().write("Missing or invalid required fields: customerId, eventId, ticketCount, paymentAmount, or reservationDate.");
+                out.write("Missing or invalid required fields.");
                 return;
             }
 
-            // Add Reservation to database
+            EditCustomersTable ect = new EditCustomersTable();
             EditReservationsTable ert = new EditReservationsTable();
-            try {
-                ert.addReservation(newReservation);
-                System.out.println("Reservation successfully added to database.");
-            } catch (Exception ex) {
-                System.err.println("Database error while adding reservation: " + ex.getMessage());
-                response.setStatus(500);
-                response.getWriter().write("Database error: " + ex.getMessage());
-                return;
-            }
 
-            // Success response
-            response.setStatus(200);
-            out.println(gson.toJson(newReservation)); // Optionally return added reservation as JSON
+            try {
+                // Fetch the customer's current balance
+                float customerBalance = ect.getCustomerBalance(newReservation.getCustomerId());
+
+                // Validate sufficient balance
+                if (customerBalance < newReservation.getPaymentAmount()) {
+                    response.setStatus(400); // Bad request
+                    out.write("Insufficient balance for the reservation.");
+                    return;
+                }
+
+                // Proceed with reservation creation and balance deduction
+                ert.addReservation(newReservation);
+
+                // Success response
+                response.setStatus(200);
+                out.println(gson.toJson(newReservation));
+                System.out.println("Reservation successfully created.");
+            } catch (Exception ex) {
+                System.err.println("Error during reservation creation: " + ex.getMessage());
+                response.setStatus(500); // Internal Server Error
+                out.write("Error during reservation creation: " + ex.getMessage());
+            }
         }
     }
 }

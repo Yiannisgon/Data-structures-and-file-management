@@ -62,24 +62,53 @@ public class EditReservationsTable {
     }
 
     public void addReservation(Reservation reservation) throws ClassNotFoundException {
+        Connection con = null;
         try {
-            Connection con = DB_Connection.getConnection();
-            Statement stmt = con.createStatement();
+            con = DB_Connection.getConnection();
+            con.setAutoCommit(false); // Start transaction
 
-            String insertQuery = "INSERT INTO reservations (customer_id, event_id, ticket_count, payment_amount, reservation_date) VALUES ("
-                    + reservation.getCustomerId() + ","
-                    + reservation.getEventId() + ","
-                    + reservation.getTicketCount() + ","
-                    + reservation.getPaymentAmount() + ","
-                    + "'" + reservation.getReservationDate() + "'"
-                    + ")";
-            System.out.println(insertQuery);
-            stmt.executeUpdate(insertQuery);
-            System.out.println("# The reservation was successfully added to the database.");
+            // Insert reservation
+            String insertQuery = "INSERT INTO reservations (customer_id, event_id, ticket_count, payment_amount, reservation_date) VALUES (?, ?, ?, ?, ?)";
+            try (PreparedStatement pstmt = con.prepareStatement(insertQuery)) {
+                pstmt.setInt(1, reservation.getCustomerId());
+                pstmt.setInt(2, reservation.getEventId());
+                pstmt.setInt(3, reservation.getTicketCount());
+                pstmt.setFloat(4, reservation.getPaymentAmount());
+                pstmt.setTimestamp(5, reservation.getReservationDate());
+                pstmt.executeUpdate();
+                System.out.println("# The reservation was successfully added to the database.");
+            }
 
-            stmt.close();
+            // Deduct payment amount from customer's balance
+            String updateBalanceQuery = "UPDATE customers SET balance = balance - ? WHERE customer_id = ?";
+            try (PreparedStatement pstmt = con.prepareStatement(updateBalanceQuery)) {
+                pstmt.setFloat(1, reservation.getPaymentAmount());
+                pstmt.setInt(2, reservation.getCustomerId());
+                int affectedRows = pstmt.executeUpdate();
+                if (affectedRows == 0) {
+                    throw new SQLException("Failed to update balance: Customer ID not found.");
+                }
+            }
+
+            con.commit(); // Commit transaction
         } catch (SQLException ex) {
-            Logger.getLogger(EditReservationsTable.class.getName()).log(Level.SEVERE, null, ex);
+            if (con != null) {
+                try {
+                    con.rollback(); // Rollback transaction on failure
+                } catch (SQLException rollbackEx) {
+                    System.err.println("Rollback failed: " + rollbackEx.getMessage());
+                }
+            }
+            throw new RuntimeException("Error adding reservation or updating balance: " + ex.getMessage(), ex);
+        } finally {
+            if (con != null) {
+                try {
+                    con.setAutoCommit(true);
+                    con.close();
+                } catch (SQLException closeEx) {
+                    System.err.println("Failed to close connection: " + closeEx.getMessage());
+                }
+            }
         }
     }
 

@@ -171,4 +171,39 @@ public class EditCustomersTable {
         return null;
     }
 
+    public void updateCustomerBalance(int customerId, float paymentAmount) throws ClassNotFoundException, SQLException {
+        try (Connection con = DB_Connection.getConnection()) {
+            String query = "UPDATE customers SET balance = balance - ? WHERE customer_id = ?";
+            try (PreparedStatement pstmt = con.prepareStatement(query)) {
+                pstmt.setFloat(1, paymentAmount);
+                pstmt.setInt(2, customerId);
+                int affectedRows = pstmt.executeUpdate();
+
+                if (affectedRows > 0) {
+                    System.out.println("Balance updated successfully for customer ID: " + customerId);
+                } else {
+                    System.err.println("No customer found with ID: " + customerId);
+                }
+            }
+        }
+    }
+
+    public float getCustomerBalance(int customerId) throws ClassNotFoundException, SQLException {
+        float balance = 0.0f;
+        String query = "SELECT balance FROM customers WHERE customer_id = ?";
+        try (Connection con = DB_Connection.getConnection();
+             PreparedStatement pstmt = con.prepareStatement(query)) {
+            pstmt.setInt(1, customerId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    balance = rs.getFloat("balance");
+                } else {
+                    throw new SQLException("Customer not found with ID: " + customerId);
+                }
+            }
+        }
+        return balance;
+    }
+
+
 }
