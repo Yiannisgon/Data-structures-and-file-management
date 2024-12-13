@@ -60,6 +60,10 @@ function CreateUser() {
     window.location.href = 'user_register.html';
 }
 
+function CreateEvent() {
+    window.location.href = 'new-event.html';  // Redirect to the new-event page
+}
+
 function showAllEvents() {
     getEvents();
     toggleDisplay('eventListModal');
