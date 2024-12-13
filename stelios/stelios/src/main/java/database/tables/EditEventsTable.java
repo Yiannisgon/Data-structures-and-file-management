@@ -241,5 +241,48 @@ public class EditEventsTable {
         return event;
     }
 
+    public int[] getAvailableAndReservedSeats(int eventId) throws SQLException, ClassNotFoundException {
+        String query = "SELECT capacity - COUNT(r.reservation_id) AS available_seats, COUNT(r.reservation_id) AS reserved_seats " +
+                "FROM events e LEFT JOIN reservations r ON e.event_id = r.event_id WHERE e.event_id = ? GROUP BY e.capacity";
+
+        try (Connection con = DB_Connection.getConnection();
+             PreparedStatement pstmt = con.prepareStatement(query)) {
+
+            pstmt.setInt(1, eventId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    int availableSeats = rs.getInt("available_seats");
+                    int reservedSeats = rs.getInt("reserved_seats");
+
+                    // Return available and reserved seats as an array
+                    return new int[]{availableSeats, reservedSeats};
+                }
+            }
+        }
+
+        return null; // If no event or reservations found
+    }
+
+    public float getRevenueForEvent(int eventId) throws SQLException, ClassNotFoundException {
+        String query = "SELECT SUM(r.payment_amount) AS total_revenue " +
+                "FROM reservations r WHERE r.event_id = ?";
+
+        try (Connection con = DB_Connection.getConnection();
+             PreparedStatement pstmt = con.prepareStatement(query)) {
+
+            pstmt.setInt(1, eventId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getFloat("total_revenue");
+                }
+            }
+        }
+
+        return -1; // Return -1 if no revenue data found
+    }
+
+
 
 }

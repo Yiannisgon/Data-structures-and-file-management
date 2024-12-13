@@ -1,8 +1,10 @@
 body {
-  /*add image as background*/
-    background-image: url("../img/background.png");
+  /* Add image as background */
+  background-image: url("../img/background.png");
+  background-size: cover;
+  background-position: center;
   font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
+  color: #333;
   margin: 0;
   padding: 0;
   display: flex;
@@ -10,15 +12,16 @@ body {
   align-items: center;
   height: 100vh;
 }
+
 #userListModal {
   background-color: #fff; /* Set modal background to white */
-  /* Add other modal styles here, such as padding, border, etc. */
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: center;
+  max-width: 600px;
+  margin: auto;
 }
-
 
 #login-container {
   background-color: #fff;
@@ -26,37 +29,47 @@ body {
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: center;
+  max-width: 400px;
+  margin: auto;
 }
 
 input {
   width: 100%;
   padding: 10px;
   margin: 8px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
   box-sizing: border-box;
 }
 
 button {
-  background-color: #4caf50;
+  background-color: #4CAF50;
   color: white;
   padding: 10px 20px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
-
-
 
 button:hover {
   background-color: #45a049;
 }
+
 #admin-actions-container {
-  /* Other styles for your container */
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   max-height: 80vh; /* Set a maximum height for the container */
   overflow: auto;   /* Enable scrolling if content overflows */
 }
 
 #keeperList, #ownerList {
-  /* Other styles for your user list divs */
+  background-color: #fff;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
   max-height: 50vh; /* Set a maximum height for the user list divs */
   overflow-y: auto; /* Enable vertical scrolling if content overflows vertically */
 }

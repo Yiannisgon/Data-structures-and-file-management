@@ -66,6 +66,11 @@ function CreateEvent() {
 function goToStatistics() {
     window.location.href = 'stats.html';  // Redirect to the new-event page
 }
+function CreateReservation() {
+    window.location.href = 'new-reservation.html';  // Redirect to the new-event page
+}
+
+
 
 
 function showAllEvents() {

@@ -8,7 +8,7 @@
 
 body {
     background-image: url("../img/background.png");
-    background-color: #f4f4f4;
+    background-color: #f4f4f9;
     color: #333;
     line-height: 1.6;
     background-size: cover;
@@ -21,14 +21,14 @@ body {
     max-width: 900px;
     margin: 30px auto;
     overflow: hidden;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     padding: 25px;
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 h1, h2 {
-    color: #333;
+    color: #4CAF50;
     margin-bottom: 20px;
     text-align: center;
     font-size: 24px;
@@ -39,7 +39,7 @@ form {
     grid-template-columns: 1fr 1fr; /* Two equal columns */
     gap: 20px;
     padding: 20px;
-    background: #e9ecef;
+    background: #f4f4f9;
     border-radius: 8px;
 }
 
@@ -65,17 +65,18 @@ form input[type="number"] {
 form button {
     padding: 12px 20px;
     border: none;
-    background-color: #0275d8;
+    background-color: #4CAF50;
     color: white;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
     grid-column: span 2; /* Span full width of form */
     justify-self: center;
+    transition: background-color 0.3s ease;
 }
 
 form button:hover {
-    background-color: #025aa5;
+    background-color: #45a049;
 }
 
 p {
@@ -103,19 +104,19 @@ p strong {
 
 /* Adjust styles for Cancel Reservation section */
 .container:last-child {
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.95);
     margin-top: 40px;
 }
 
 #reservationListContainer {
     margin-top: 20px;
     padding: 10px;
-    background: #f8f9fa;
+    background: #f9f9f9;
     border-radius: 8px;
     border: 1px solid #ddd;
 }
 
 /* Hover effect for input fields */
 form input[type="email"]:hover, form input[type="number"]:hover, form select:hover {
-    border-color: #0275d8;
+    border-color: #4CAF50;
 }

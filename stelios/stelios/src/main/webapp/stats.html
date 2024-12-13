@@ -13,14 +13,22 @@
 <main>
     <section>
         <h2>Available and Reserved Seats per Event</h2>
-        <button onclick="fetchAvailableAndReservedSeats()">View</button>
+        <label for="event-dropdown">Select Event:</label>
+        <select id="event-dropdown" onchange="fetchAvailableAndReservedSeats()" required>
+            <option value="" disabled selected>Select an event</option>
+        </select>
         <div id="available-reserved-seats"></div>
     </section>
+
     <section>
         <h2>Revenue per Event</h2>
-        <button onclick="fetchRevenuePerEvent()">View</button>
+        <label for="revenue-event-dropdown">Select Event:</label>
+        <select id="revenue-event-dropdown" onchange="fetchRevenuePerEvent()" required>
+            <option value="" disabled selected>Select an event</option>
+        </select>
         <div id="revenue-per-event"></div>
     </section>
+
     <section>
         <h2>Most Tickets Reserved Event</h2>
         <button onclick="fetchMostTicketsReservedEvent()">View</button>
