@@ -4,8 +4,15 @@ import mainClasses.Reservation;
 import com.google.gson.Gson;
 import database.DB_Connection;
 
+import com.google.gson.*;
+
+import java.lang.reflect.Type;
+import java.sql.Timestamp;
+
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class EditReservationsTable {
 
@@ -106,16 +113,46 @@ public class EditReservationsTable {
         ArrayList<Reservation> reservations = new ArrayList<>();
         String query = "SELECT * FROM reservations";
 
+        // Create a Gson instance with the custom deserializer
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Reservation.class, new JsonDeserializer<Reservation>() {
+                    @Override
+                    public Reservation deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                        JsonObject jsonObject = json.getAsJsonObject();
+
+                        Reservation reservation = new Reservation();
+                        reservation.setReservationId(jsonObject.get("reservation_id").getAsInt());
+                        reservation.setCustomerId(jsonObject.get("customer_id").getAsInt());
+                        reservation.setEventId(jsonObject.get("event_id").getAsInt());
+                        reservation.setTicketCount(jsonObject.get("ticket_count").getAsInt());
+                        reservation.setPaymentAmount(jsonObject.get("payment_amount").getAsFloat());
+
+                        // Parse the reservation date
+                        String dateStr = jsonObject.get("reservation_date").getAsString();
+                        reservation.setReservationDate(Timestamp.valueOf(dateStr.replace("T", " ").replace("Z", "")));
+
+                        return reservation;
+                    }
+                })
+                .create();
+
         try (Connection con = DB_Connection.getConnection();
              Statement stmt = con.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
 
             while (rs.next()) {
+                // Convert the ResultSet row to JSON
                 String json = DB_Connection.getResultsToJSON(rs);
-                Reservation reservation = jsonToReservation(json);
-                if (reservation != null) {
+                System.out.println("Raw Reservation JSON: " + json);
+
+                // Deserialize the JSON into a Reservation object
+                try {
+                    Reservation reservation = gson.fromJson(json, Reservation.class);
                     reservations.add(reservation);
-                    System.out.println("Retrieved Reservation: " + reservationToJSON(reservation));
+                    System.out.println("Retrieved Reservation: " + gson.toJson(reservation));
+                } catch (JsonParseException e) {
+                    System.err.println("Failed to parse reservation JSON: " + e.getMessage());
+                    e.printStackTrace();
                 }
             }
         }
@@ -139,6 +176,57 @@ public class EditReservationsTable {
         }
         if (reservation.getReservationDate() == null) {
             throw new IllegalArgumentException("Reservation date cannot be null.");
+        }
+    }
+
+    public void deleteReservationById(String reservationId) throws ClassNotFoundException {
+        String deleteQuery = "DELETE FROM reservations WHERE reservation_id = ?";
+
+        try (Connection con = DB_Connection.getConnection();
+             PreparedStatement pstmt = con.prepareStatement(deleteQuery)) {
+
+            // Step 1: Retrieve the reservation details
+            String getReservationQuery = "SELECT customer_id, payment_amount FROM reservations WHERE reservation_id = ?";
+            try (PreparedStatement reservationStmt = con.prepareStatement(getReservationQuery)) {
+                reservationStmt.setString(1, reservationId);
+                try (ResultSet rs = reservationStmt.executeQuery()) {
+
+                    if (rs.next()) {
+                        int customerId = rs.getInt("customer_id");
+                        float paymentAmount = rs.getFloat("payment_amount");
+
+                        // Step 2: Refund the amount to the customer's balance
+                        String refundQuery = "UPDATE customers SET balance = balance + ? WHERE customer_id = ?";
+                        try (PreparedStatement refundStmt = con.prepareStatement(refundQuery)) {
+                            refundStmt.setFloat(1, paymentAmount);
+                            refundStmt.setInt(2, customerId);
+                            int affectedRows = refundStmt.executeUpdate();
+
+                            if (affectedRows > 0) {
+                                System.out.println("Refunded " + paymentAmount + " to customer ID: " + customerId);
+                            } else {
+                                System.err.println("Failed to refund to customer ID: " + customerId);
+                            }
+                        }
+                    } else {
+                        System.err.println("No reservation found with ID: " + reservationId);
+                        return; // Exit if no reservation is found
+                    }
+                }
+            }
+
+            // Step 3: Delete the reservation
+            pstmt.setString(1, reservationId);
+            int rowsAffected = pstmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("# The reservation with ID " + reservationId + " was successfully deleted from the database.");
+            } else {
+                System.out.println("# No reservation found with the provided ID.");
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(EditReservationsTable.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException("Error deleting the reservation from the database: " + ex.getMessage());
         }
     }
 }

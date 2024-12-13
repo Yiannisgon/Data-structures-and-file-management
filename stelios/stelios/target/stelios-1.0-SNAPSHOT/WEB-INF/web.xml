@@ -73,6 +73,22 @@
         <servlet-name>DeleteEvent</servlet-name>
         <servlet-class>servlets.DeleteEvent</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DeleteReservation</servlet-name>
+        <servlet-class>servlets.DeleteReservation</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GetReservations</servlet-name>
+        <servlet-class>servlets.GetReservations</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DeleteReservation</servlet-name>
+        <url-pattern>/DeleteReservation</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GetReservations</servlet-name>
+        <url-pattern>/GetReservations</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>DeleteEvent</servlet-name>
         <url-pattern>/DeleteEvent</url-pattern>

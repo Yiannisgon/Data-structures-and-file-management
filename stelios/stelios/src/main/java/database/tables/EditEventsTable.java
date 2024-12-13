@@ -163,9 +163,44 @@ public class EditEventsTable {
         try (Connection con = DB_Connection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(deleteQuery)) {
 
-            // Set the eventId parameter in the prepared statement
-            pstmt.setString(1, eventId);
+            // Step 1: Retrieve all reservations for the given event ID
+            String getReservationsQuery = "SELECT customer_id, payment_amount FROM reservations WHERE event_id = ?";
+            try (PreparedStatement reservationStmt = con.prepareStatement(getReservationsQuery)) {
+                reservationStmt.setString(1, eventId);
+                try (ResultSet rs = reservationStmt.executeQuery()) {
 
+                    System.out.println("Checking reservations for event ID: " + eventId);
+                    while (rs.next()) {
+                        int customerId = rs.getInt("customer_id");
+                        float paymentAmount = rs.getFloat("payment_amount");
+
+                        // Step 2: Refund the amount to the customer's balance
+                        String refundQuery = "UPDATE customers SET balance = balance + ? WHERE customer_id = ?";
+                        try (PreparedStatement refundStmt = con.prepareStatement(refundQuery)) {
+                            refundStmt.setFloat(1, paymentAmount);
+                            refundStmt.setInt(2, customerId);
+                            int affectedRows = refundStmt.executeUpdate();
+
+                            if (affectedRows > 0) {
+                                System.out.println("Refunded " + paymentAmount + " to customer ID: " + customerId);
+                            } else {
+                                System.err.println("Failed to refund to customer ID: " + customerId);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Step 3: Delete the reservations associated with the event
+            String deleteReservationsQuery = "DELETE FROM reservations WHERE event_id = ?";
+            try (PreparedStatement deleteReservationsStmt = con.prepareStatement(deleteReservationsQuery)) {
+                deleteReservationsStmt.setString(1, eventId);
+                int deletedReservations = deleteReservationsStmt.executeUpdate();
+                System.out.println("Deleted " + deletedReservations + " reservations associated with event ID: " + eventId);
+            }
+
+            // Step 4: Delete the event
+            pstmt.setString(1, eventId);
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
                 System.out.println("# The event was successfully deleted from the database.");

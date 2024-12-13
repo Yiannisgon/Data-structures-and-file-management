@@ -312,10 +312,6 @@ function calculateEarnings(bookings) {
     return {keepersEarnings, appEarnings};
 }
 
-function getAvailableTickets() {
-    return;
-}
-
 function CreateUser() {
     window.location.href = 'user_register.html'; // Change 'register.html' to your actual registration page URL
 }
@@ -413,3 +409,114 @@ function deleteEvent(eventId) {
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhr.send();
 }
+function showAllReservations() {
+    getReservations();
+    toggleDisplay('eventListModal');
+}
+
+// Function to get reservations
+function getReservations() {
+    console.log("Starting getReservations function...");
+
+    var xhr = new XMLHttpRequest();
+    console.log("Created XMLHttpRequest object.");
+
+    xhr.onload = function () {
+        console.log("XHR onload triggered.");
+        console.log("XHR readyState: ", xhr.readyState);
+        console.log("XHR status: ", xhr.status);
+
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log("XHR response received successfully.");
+            console.log("Response text: ", xhr.responseText);
+
+            try {
+                // Parse the JSON response
+                var reservations = JSON.parse(xhr.responseText);
+                console.log("Parsed reservations JSON: ", reservations);
+
+                // Log each reservation
+                reservations.forEach(function (reservation, index) {
+                    console.log("Reservation at index " + index + ": ", reservation);
+                });
+
+                // Create HTML content for each reservation
+                var reservationListContent = '';
+                reservations.forEach(function (reservation) {
+                    reservationListContent += createTableReservation(reservation);
+                });
+
+                // Update the #reservationList div
+                document.getElementById("reservationList").innerHTML = reservationListContent;
+                console.log("Reservation list content updated in the DOM.");
+            } catch (error) {
+                console.error("Error parsing reservations JSON: ", error);
+                document.getElementById("reservationList").innerHTML = "Error parsing reservations data.";
+            }
+        } else if (xhr.status !== 200) {
+            console.error("Failed to fetch reservations. HTTP Status: ", xhr.status);
+            document.getElementById("reservationList").innerHTML = "Could not retrieve reservations data.";
+        }
+    };
+
+    xhr.onerror = function () {
+        console.error("XHR encountered an error.");
+        document.getElementById("reservationList").innerHTML = "Failed to retrieve reservations data.";
+    };
+
+    xhr.open('GET', 'GetReservations');
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    console.log("Sending XHR request...");
+    xhr.send();
+}
+
+// Function to create a reservation table
+function createTableReservation(reservation) {
+    var html = '<table>';
+    html += '<tr><th colspan="2">Reservation ID: ' + reservation.reservationId + '</th></tr>';
+
+    // Include keys and their values dynamically
+    var includeKeys = ['customerID', 'eventID', 'ticketCount', 'paymentAmount', 'reservationDate'];
+    includeKeys.forEach(function (key) {
+        if (reservation.hasOwnProperty(key) && reservation[key] !== null) {
+            var value = reservation[key];
+            html += '<tr><td>' + key.replace(/([A-Z])/g, ' $1').trim() + '</td><td>' + value + '</td></tr>';
+        }
+    });
+
+    // Add delete reservation button with reservationId
+    html += '<tr><td colspan="2"><button onclick="deleteReservation(' + reservation.reservationId + ')">Delete Reservation</button></td></tr>';
+    html += '</table><br>';
+    return html;
+}
+
+
+// Function to delete a reservation
+function deleteReservation(reservationId) {
+    if (!reservationId || isNaN(reservationId)) {
+        console.error("Invalid reservation ID:", reservationId);
+        alert("Invalid Reservation ID!");
+        return;
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log("Reservation deleted: " + reservationId);
+            getReservations(); // Refresh the reservation list
+        } else if (xhr.status !== 200) {
+            console.error("Error deleting reservation: " + reservationId, xhr.responseText);
+        }
+    };
+
+    var url = 'DeleteReservation?reservation_id=' + reservationId; // Updated parameter name to 'reservation_id'
+    console.log("Request URL:", url); // Log the URL for debugging
+    xhr.open('GET', url);
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xhr.send();
+}
+function showAllTickets() {
+    // getTickets();
+    toggleDisplay('eventListModal');
+}
+

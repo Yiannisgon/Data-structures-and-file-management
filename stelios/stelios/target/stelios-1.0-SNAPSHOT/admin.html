@@ -16,44 +16,44 @@
     <button onclick="deleteDB()">Delete Database</button>
     <button onclick="CreateUser()">Create User</button>
     <button onclick="CreateEvent()">Create Event</button>
-    <button onclick="getAvailableTickets()">Show Availble Tickets</button>
     <button onclick="showAllEvents()">Show Events</button>
+    <button onclick="showAllReservations()">Show Reservation</button>
+    <button onclick="showAllTickets()">Show Tickets</button>
 
-
-    <!-- Button to show all users -->
-    <!--<button onclick="showAllUsers()">Show All Users</button>-->
-
-    <!-- Button to show statistics -->
-    <!-- <button onclick="showStatistics()">Show Statistics</button>-->
-
-    <!-- Logout button -->
     <button onclick="logout()">Logout</button>
 
-    <!-- Modal for displaying user list -->
-<!--    <div id="userListModal" class="modal">-->
-<!--        <div class="modal-content">-->
-<!--            <span class="close" onclick="closeModal()">&times;</span>-->
-<!--            <h3>All Keepers</h3>-->
-<!--            <div id="keeperList"></div>-->
-<!--            <h3>All Owners</h3>-->
-<!--            <div id="ownerList"></div>-->
-<!--        </div>-->
-<!--    </div>-->
+<div id="eventListModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <!-- Container for displaying event list -->
+        <h3>All Events</h3>
+        <div id="eventList"></div>
+    </div>
+</div>
+<div id="reservationListModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <!-- Container for displaying event list -->
+        <h3>All Reservations</h3>
+        <div id="reservationList"></div>
+    </div>
+</div>
+<div id="ticketListModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <!-- Container for displaying event list -->
+        <h3>All Events</h3>
+        <div id="ticketList"></div>
+    </div>
+</div>
 
-    <div id="eventListModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <!-- Container for displaying event list -->
-            <h3>All Events</h3>
-            <div id="eventList"></div>
-        </div>
 <!--    </div>-->
 <!--    <div id="catDogChart" style="width: 100%; height: 500px;"></div>-->
 <!--    <div id="ownerKeeperChart" style="width: 100%; height: 500px;"></div>-->
 <!--    <div id="earningsChart" style="width: 100%; height: 500px;"></div>-->
 <!--</div>-->
 
-
+</div>
 <script src="js/admin-actions.js"></script>
 </body>
 </html>
