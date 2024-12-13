@@ -8,6 +8,7 @@ function submitForm() {
         "name": document.getElementById("name").value,
         "email": document.getElementById("email").value,
         "credit_card_details": document.getElementById("credit_card").value,
+        "balance": parseFloat(document.getElementById("balance").value) || 0 // Default to 0 if not specified
     };
 
     // Log the form data
@@ -27,10 +28,8 @@ function submitForm() {
         }
     };
 
-
-    // Print the JSON being sent
-    console.log("Sending JSON:", JSON.stringify(formData));
     // Send collected data as JSON
     xhr.send(JSON.stringify(formData));
 }
+
 

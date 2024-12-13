@@ -12,6 +12,8 @@ public class Customer {
     @SerializedName("credit_card_details") // Maps "credit_card_details" to this field
     private String creditCardDetails;
 
+    private float balance = 0.0f;
+
     // Getters and setters
     public int getCustomerId() {
         return customerId;
@@ -43,5 +45,13 @@ public class Customer {
 
     public void setCreditCardDetails(String creditCardDetails) {
         this.creditCardDetails = creditCardDetails;
+    }
+
+    public float getBalance() {
+        return balance;
+    }
+
+    public void setBalance(float balance) {
+        this.balance = balance;
     }
 }

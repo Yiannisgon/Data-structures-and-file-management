@@ -56,24 +56,19 @@ public class CreateCustomer extends HttpServlet {
             // Validate fields
             if (newCustomer.getName() == null || newCustomer.getName().isEmpty() ||
                     newCustomer.getEmail() == null || newCustomer.getEmail().isEmpty() ||
-                    newCustomer.getCreditCardDetails() == null || newCustomer.getCreditCardDetails().isEmpty()) {
-
-                System.out.println("Parsed Customer: " +
-                        "Name: " + newCustomer.getName() +
-                        ", Email: " + newCustomer.getEmail() +
-                        ", Credit Card: " + newCustomer.getCreditCardDetails());
-
-
+                    newCustomer.getCreditCardDetails() == null || newCustomer.getCreditCardDetails().isEmpty() ||
+                    newCustomer.getBalance() < 0) { // Ensure balance is not negative
+                System.err.println("Validation failed: Missing or invalid fields.");
                 response.setStatus(400); // Bad request
-                out.write("Missing required fields: name, email, or credit_card_details.");
-                System.err.println("Validation failed: Missing required fields.");
+                out.write("Missing required fields: name, email, credit_card_details, or invalid balance.");
                 return;
             }
 
             System.out.println("Parsed Customer: " +
                     "Name: " + newCustomer.getName() +
                     ", Email: " + newCustomer.getEmail() +
-                    ", Credit Card: " + newCustomer.getCreditCardDetails());
+                    ", Credit Card: " + newCustomer.getCreditCardDetails() +
+                    ", Balance: " + newCustomer.getBalance());
 
             // Add the new customer to the database
             ect.addNewCustomer(newCustomer);
@@ -84,6 +79,10 @@ public class CreateCustomer extends HttpServlet {
             Logger.getLogger(CreateCustomer.class.getName()).log(Level.SEVERE, null, ex);
             response.setStatus(500); // Set error status code
             response.getWriter().write("An error occurred: " + ex.getMessage());
+        } catch (Exception e) {
+            System.err.println("Unexpected error: " + e.getMessage());
+            response.setStatus(500);
+            response.getWriter().write("Unexpected error occurred: " + e.getMessage());
         }
     }
 }

@@ -66,6 +66,7 @@ public class EditCustomersTable {
                 + "name VARCHAR(50) not NULL, "
                 + "email VARCHAR(50) not NULL UNIQUE, "
                 + "credit_card_details VARCHAR(100), "
+                + "balance FLOAT DEFAULT 0.0, " // Balance as FLOAT
                 + "PRIMARY KEY (customer_id))";
         stmt.execute(query);
         stmt.close();
@@ -75,15 +76,24 @@ public class EditCustomersTable {
         try {
             Connection con = DB_Connection.getConnection();
             Statement stmt = con.createStatement();
-            System.out.println("CUSTOMER BEING ADDED...\n" + "name " + customer.getName() + "email " + customer.getEmail() + "credit card details " + customer.getCreditCardDetails());
-            String insertQuery = "INSERT INTO customers (name, email, credit_card_details) "
+            System.out.println("CUSTOMER BEING ADDED...\n"
+                    + "Name: " + customer.getName()
+                    + ", Email: " + customer.getEmail()
+                    + ", Credit Card Details: " + customer.getCreditCardDetails()
+                    + ", Balance: " + customer.getBalance());
+
+            String insertQuery = "INSERT INTO customers (name, email, credit_card_details, balance) "
                     + "VALUES ("
                     + "'" + customer.getName() + "',"
                     + "'" + customer.getEmail() + "',"
-                    + "'" + customer.getCreditCardDetails() + "'"
+                    + "'" + customer.getCreditCardDetails() + "',"
+                    + customer.getBalance()
                     + ")";
-            System.out.println("Insert query"+ insertQuery);
+
+            System.out.println("Insert query: " + insertQuery);
+
             stmt.executeUpdate(insertQuery);
+
             System.out.println("# The customer was successfully added to the database.");
 
             stmt.close();

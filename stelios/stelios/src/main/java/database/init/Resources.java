@@ -195,9 +195,7 @@ public class Resources {
     static String reservation1 = "{\"customerId\":1,\"eventId\":1,\"ticketCount\":1,\"paymentAmount\":1.00,\"reservationDate\":\"2023-08-11T16:10:10Z\n\"}";
     static String reservation2 = "{\"customerId\":2,\"eventId\":1,\"ticketCount\":1,\"paymentAmount\":2.00,\"reservationDate\":\"2023-08-11T16:10:10Z\n\"}";
 
-
-
-    static String ticket1 = "{\"price\":10.0,\"availability\":10,\"type\":\"VIP\"}";
-    static String ticket2 = "{\"price\":5.0,\"availability\":20,\"type\":\"GeneralAdmission\"}";
+    static String ticket1 = "{\"price\":10.0,\"availability\":10,\"type\":\"VIP\",\"event_id\":1}";
+    static String ticket2 = "{\"price\":5.0,\"availability\":20,\"type\":\"GeneralAdmission\",\"event_id\":1}";
 
 }

@@ -5,6 +5,7 @@ public class Ticket {
     private int availability;
     private Float price;
     private String type;
+    private int event_id;
 
     public int getTicketId() {
         return ticketId;
@@ -36,6 +37,13 @@ public class Ticket {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public int getEvent_id() {
+        return event_id;
+    }
+    public void setEvent_id(int event_id) {
+        this.event_id = event_id;
     }
 
     @Override

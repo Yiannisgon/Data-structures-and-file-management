@@ -52,7 +52,10 @@ public class EditTicketsTable {
                 + "availability INTEGER not NULL, "
                 + "price FLOAT not NULL, "
                 + "type VARCHAR(50) not NULL, "
-                + "PRIMARY KEY (ticket_id))";
+                + "event_id INTEGER not NULL, "
+                + "PRIMARY KEY (ticket_id), "
+                + "FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE CASCADE ON UPDATE CASCADE)";
+
         stmt.execute(query);
         stmt.close();
     }
@@ -65,10 +68,11 @@ public class EditTicketsTable {
             Connection con = DB_Connection.getConnection();
             Statement stmt = con.createStatement();
 
-            String insertQuery = "INSERT INTO tickets (availability, price, type) VALUES ("
+            String insertQuery = "INSERT INTO tickets (availability, price, type, event_id) VALUES ("
                     + ticket.getAvailability() + ", "
                     + ticket.getPrice() + ", "
-                    + "'" + ticket.getType() + "'"
+                    + "'" + ticket.getType() + "', "
+                    + ticket.getEvent_id() // Assuming ticket has a getEventId() method
                     + ")";
             System.out.println(insertQuery);
             stmt.executeUpdate(insertQuery);
