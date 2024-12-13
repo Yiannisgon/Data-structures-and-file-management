@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Stats</title>
+    <link rel="stylesheet" href="statscss.css">
+</head>
+<body>
+<header>
+    <h1>Event Statistics</h1>
+</header>
+<main>
+    <section>
+        <h2>Available and Reserved Seats per Event</h2>
+        <button onclick="fetchAvailableAndReservedSeats()">View</button>
+        <div id="available-reserved-seats"></div>
+    </section>
+    <section>
+        <h2>Revenue per Event</h2>
+        <button onclick="fetchRevenuePerEvent()">View</button>
+        <div id="revenue-per-event"></div>
+    </section>
+    <section>
+        <h2>Most Tickets Reserved Event</h2>
+        <button onclick="fetchMostTicketsReservedEvent()">View</button>
+        <div id="most-tickets-reserved-event"></div>
+    </section>
+    <section>
+        <h2>Most Profitable Event in a Time Range</h2>
+        <label for="start-date">Start Date:</label>
+        <input type="date" id="start-date">
+        <label for="end-date">End Date:</label>
+        <input type="date" id="end-date">
+        <button onclick="fetchMostProfitableEvent()">View</button>
+        <div id="most-profitable-event"></div>
+    </section>
+    <section>
+        <h2>Reservations by Time Period</h2>
+        <label for="reservation-start-date">Start Date:</label>
+        <input type="date" id="reservation-start-date">
+        <label for="reservation-end-date">End Date:</label>
+        <input type="date" id="reservation-end-date">
+        <button onclick="fetchReservationsByTimePeriod()">View</button>
+        <div id="reservations-by-time-period"></div>
+    </section>
+    <section>
+        <h2>Total Revenue for VIP or General Tickets</h2>
+        <label for="ticket-type">Ticket Type:</label>
+        <select id="ticket-type">
+            <option value="vip">VIP</option>
+            <option value="general">General</option>
+        </select>
+        <button onclick="fetchTotalRevenueByTicketType()">View</button>
+        <div id="total-revenue-by-ticket-type"></div>
+    </section>
+    <section>
+        <h2>Event Revenue for VIP or General Tickets</h2>
+        <label for="event-id">Event ID:</label>
+        <input type="text" id="event-id" placeholder="Enter Event ID">
+        <label for="ticket-type-event">Ticket Type:</label>
+        <select id="ticket-type-event">
+            <option value="vip">VIP</option>
+            <option value="general">General</option>
+        </select>
+        <button onclick="fetchEventRevenueByTicketType()">View</button>
+        <div id="event-revenue-by-ticket-type"></div>
+    </section>
+</main>
+<script src="stats.js"></script>
+</body>
+</html>

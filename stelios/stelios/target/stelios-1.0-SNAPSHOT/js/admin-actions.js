@@ -63,6 +63,10 @@ function CreateUser() {
 function CreateEvent() {
     window.location.href = 'new-event.html';  // Redirect to the new-event page
 }
+function goToStatistics() {
+    window.location.href = 'stats.html';  // Redirect to the new-event page
+}
+
 
 function showAllEvents() {
     getEvents();
@@ -190,9 +194,6 @@ function deleteReservation(reservationId) {
     xhr.send();
 }
 
-function showAllTickets() {
-    toggleDisplay('ticketListModal');
-}
 
 function getTotalRevenue() {
     var revenueDisplay = document.getElementById("totalRevenueDisplay");
