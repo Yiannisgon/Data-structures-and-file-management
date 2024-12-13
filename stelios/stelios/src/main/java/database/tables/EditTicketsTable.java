@@ -6,6 +6,8 @@ import com.google.gson.Gson;
 import database.DB_Connection;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -160,4 +162,47 @@ public class EditTicketsTable {
             Logger.getLogger(EditTicketsTable.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    // Method to get total revenue for both ticket types
+    public Map<String, Float> getTotalRevenueForAllTypes() throws SQLException, ClassNotFoundException {
+        String query = "SELECT T.type AS TicketType, SUM(RT.ticket_count * T.price) AS TotalRevenue "
+                + "FROM tickets T "
+                + "JOIN reservations RT ON T.ticket_id = RT.ticket_id "
+                + "GROUP BY T.type";
+
+        Map<String, Float> revenueMap = new HashMap<>();
+
+        try (Connection con = DB_Connection.getConnection();
+             Statement stmt = con.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+
+            // Iterate through the result set and add the total revenue for each ticket type to the map
+            while (rs.next()) {
+                String ticketType = rs.getString("TicketType");
+                float totalRevenue = rs.getFloat("TotalRevenue");
+                revenueMap.put(ticketType, totalRevenue);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(EditTicketsTable.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException("Error fetching total revenue: " + ex.getMessage());
+        }
+
+        return revenueMap;
+    }
+
+    public void updateAvailability(int eventId, String ticketType, int count) throws SQLException, ClassNotFoundException {
+        try (Connection con = DB_Connection.getConnection();
+             PreparedStatement pstmt = con.prepareStatement("UPDATE tickets SET availability = availability - ? WHERE event_id = ? AND type = ?")) {
+            pstmt.setInt(1, count);
+            pstmt.setInt(2, eventId);
+            pstmt.setString(3, ticketType);
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Failed to update availability: No matching ticket found.");
+            }
+            System.out.println("Ticket availability updated for event " + eventId + " and ticket type " + ticketType);
+        }
+    }
+
 }

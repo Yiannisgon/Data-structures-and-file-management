@@ -1,10 +1,8 @@
 package servlets;
 
-import database.tables.EditEventsTable;
 import database.tables.EditReservationsTable;
-import mainClasses.Event;
-import com.google.gson.Gson;
 import mainClasses.Reservation;
+import com.google.gson.Gson;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,7 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Servlet to get all events.
+ * Servlet to get all reservations.
  */
 public class GetReservations extends HttpServlet {
 
@@ -30,17 +28,17 @@ public class GetReservations extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             EditReservationsTable ert = new EditReservationsTable();
 
-            // Get all events
+            // Get all reservations
             ArrayList<Reservation> reservations = ert.getAllReservations();
 
-            // Convert the list to JSON
+            // Convert the list to JSON (including the ticketType)
             String json = new Gson().toJson(reservations);
             out.println(json);
 
-            response.setStatus(200);
+            response.setStatus(200);  // Set success status code (200)
         } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(GetEvents.class.getName()).log(Level.SEVERE, null, ex);
-            response.setStatus(500); // Set error status code
+            Logger.getLogger(GetReservations.class.getName()).log(Level.SEVERE, null, ex);
+            response.setStatus(500); // Set error status code (500)
         }
     }
 

@@ -17,10 +17,16 @@
     <button onclick="CreateUser()">Create User</button>
     <button onclick="CreateEvent()">Create Event</button>
     <button onclick="showAllEvents()">Show Events</button>
-    <button onclick="showAllReservations()">Show Reservation</button>
+    <button onclick="showAllReservations()">Show Reservations</button>
     <button onclick="showAllTickets()">Show Tickets</button>
 
     <button onclick="logout()">Logout</button>
+
+<!-- New button to fetch and display total revenue -->
+<button onclick="getTotalRevenue()">Get Total Revenue</button>
+
+<!-- Placeholder to display total revenue -->
+<div id="totalRevenueDisplay"></div>
 
 <div id="eventListModal" class="modal">
     <div class="modal-content">
@@ -46,12 +52,6 @@
         <div id="ticketList"></div>
     </div>
 </div>
-
-<!--    </div>-->
-<!--    <div id="catDogChart" style="width: 100%; height: 500px;"></div>-->
-<!--    <div id="ownerKeeperChart" style="width: 100%; height: 500px;"></div>-->
-<!--    <div id="earningsChart" style="width: 100%; height: 500px;"></div>-->
-<!--</div>-->
 
 </div>
 <script src="js/admin-actions.js"></script>

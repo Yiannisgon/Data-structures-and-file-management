@@ -476,7 +476,7 @@ function createTableReservation(reservation) {
     html += '<tr><th colspan="2">Reservation ID: ' + reservation.reservationId + '</th></tr>';
 
     // Include keys and their values dynamically
-    var includeKeys = ['customerID', 'eventID', 'ticketCount', 'paymentAmount', 'reservationDate'];
+    var includeKeys = ['customerID', 'eventID', 'ticketCount', 'paymentAmount', 'reservationDate', 'ticketType'];  // Added 'ticketType' here
     includeKeys.forEach(function (key) {
         if (reservation.hasOwnProperty(key) && reservation[key] !== null) {
             var value = reservation[key];
@@ -520,3 +520,26 @@ function showAllTickets() {
     toggleDisplay('eventListModal');
 }
 
+// Function to fetch total revenue using XMLHttpRequest
+function getTotalRevenue() {
+    var xhr = new XMLHttpRequest();  // Create a new XHR object
+    xhr.onload = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            // If request was successful, display the response in the HTML
+            document.getElementById('totalRevenueDisplay').innerHTML =
+                "<h3>Total Revenue:</h3><pre>" + xhr.responseText + "</pre>";
+        } else if (xhr.status !== 200) {
+            // Handle errors if the request fails
+            console.error("Error fetching total revenue:", xhr.status, xhr.responseText);
+            alert("Error fetching total revenue: " + xhr.responseText);
+        }
+    };
+
+    // The URL of the servlet that returns total revenue (you may need to update this)
+    var url = 'TotalRevenueServlet';
+    console.log("Request URL:", url); // Log the URL for debugging
+
+    xhr.open('GET', url, true);  // Open the request with the GET method
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');  // Set request header
+    xhr.send();  // Send the request
+}

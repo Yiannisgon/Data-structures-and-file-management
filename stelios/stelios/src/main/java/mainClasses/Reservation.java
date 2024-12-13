@@ -1,11 +1,11 @@
 package mainClasses;
 
 import com.google.gson.annotations.SerializedName;
-
 import java.sql.Timestamp;
 
 public class Reservation {
     private int reservationId;
+
     @SerializedName("customerID")
     private int customerId;
 
@@ -15,6 +15,9 @@ public class Reservation {
     private int ticketCount;
     private float paymentAmount;
     private Timestamp reservationDate;
+
+    // Added field for ticket type
+    private String ticketType;
 
     public int getReservationId() {
         return reservationId;
@@ -62,5 +65,27 @@ public class Reservation {
 
     public void setReservationDate(Timestamp reservationDate) {
         this.reservationDate = reservationDate;
+    }
+
+    // Getter and Setter for ticketType
+    public String getTicketType() {
+        return ticketType;
+    }
+
+    public void setTicketType(String ticketType) {
+        this.ticketType = ticketType;
+    }
+
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "reservationId=" + reservationId +
+                ", customerId=" + customerId +
+                ", eventId=" + eventId +
+                ", ticketCount=" + ticketCount +
+                ", paymentAmount=" + paymentAmount +
+                ", reservationDate=" + reservationDate +
+                ", ticketType='" + ticketType + '\'' +
+                '}';
     }
 }

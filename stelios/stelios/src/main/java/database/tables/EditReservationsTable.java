@@ -3,7 +3,6 @@ package database.tables;
 import mainClasses.Reservation;
 import com.google.gson.Gson;
 import database.DB_Connection;
-
 import com.google.gson.*;
 
 import java.lang.reflect.Type;
@@ -19,12 +18,18 @@ public class EditReservationsTable {
     public void addReservationFromJSON(String json) throws ClassNotFoundException {
         System.out.println("Starting to add reservation from JSON...");
         System.out.println("Received JSON: " + json);
+
+        // Parse the JSON into a Reservation object
         Reservation reservation = jsonToReservation(json);
-        if (reservation != null) {
+
+        // Extract ticketType from JSON
+        String ticketType = extractTicketTypeFromJSON(json);
+
+        if (reservation != null && ticketType != null) {
             System.out.println("Parsed Reservation: " + reservationToJSON(reservation));
-            addReservation(reservation);
+            addReservation(reservation, ticketType);
         } else {
-            System.err.println("Failed to parse reservation JSON.");
+            System.err.println("Failed to parse reservation JSON or ticket type is missing.");
         }
     }
 
@@ -41,6 +46,17 @@ public class EditReservationsTable {
         }
     }
 
+    // Method to extract ticketType from the JSON string
+    private String extractTicketTypeFromJSON(String json) {
+        Gson gson = new Gson();
+        JsonObject jsonObject = gson.fromJson(json, JsonObject.class);
+
+        if (jsonObject.has("ticketType")) {
+            return jsonObject.get("ticketType").getAsString();
+        }
+        return null;  // Return null if ticketType is not found
+    }
+
     public String reservationToJSON(Reservation reservation) {
         Gson gson = new Gson();
         return gson.toJson(reservation, Reservation.class);
@@ -55,6 +71,7 @@ public class EditReservationsTable {
                     + "ticket_count INTEGER NOT NULL, "
                     + "payment_amount FLOAT NOT NULL, "
                     + "reservation_date TIMESTAMP NOT NULL, "
+                    + "ticket_type VARCHAR(50), " // Add ticket_type column to the table
                     + "PRIMARY KEY (reservation_id), "
                     + "FOREIGN KEY (customer_id) REFERENCES customers(customer_id) "
                     + "ON DELETE CASCADE ON UPDATE CASCADE, "
@@ -66,30 +83,63 @@ public class EditReservationsTable {
         }
     }
 
-    public void addReservation(Reservation reservation) throws ClassNotFoundException {
-        if (reservation == null) {
-            throw new IllegalArgumentException("Reservation object cannot be null.");
+    // Update to include ticketType when adding a reservation
+    public void addReservation(Reservation reservation, String ticketType) throws ClassNotFoundException {
+        if (reservation == null || ticketType == null) {
+            throw new IllegalArgumentException("Reservation or Ticket Type cannot be null.");
         }
 
-        System.out.println("Adding reservation: " + reservationToJSON(reservation));
+        System.out.println("Adding reservation for ticket type: " + ticketType);
         validateReservation(reservation);
 
         try (Connection con = DB_Connection.getConnection()) {
             con.setAutoCommit(false); // Start transaction
 
-            // Insert reservation
-            String insertQuery = "INSERT INTO reservations (customer_id, event_id, ticket_count, payment_amount, reservation_date) VALUES (?, ?, ?, ?, ?)";
-            try (PreparedStatement pstmt = con.prepareStatement(insertQuery)) {
+            // Step 1: Check ticket availability
+            String availabilityQuery = "SELECT availability FROM tickets WHERE event_id = ? AND type = ?";
+            int availableTickets;
+
+            try (PreparedStatement pstmt = con.prepareStatement(availabilityQuery)) {
+                pstmt.setInt(1, reservation.getEventId());
+                pstmt.setString(2, ticketType);
+
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    if (rs.next()) {
+                        availableTickets = rs.getInt("availability");
+                    } else {
+                        throw new IllegalArgumentException("No tickets found for the selected event and ticket type.");
+                    }
+                }
+            }
+
+            if (availableTickets < reservation.getTicketCount()) {
+                throw new IllegalArgumentException("Not enough tickets available for the selected type.");
+            }
+
+            // Step 2: Deduct tickets from availability
+            String updateAvailabilityQuery = "UPDATE tickets SET availability = availability - ? WHERE event_id = ? AND type = ?";
+            try (PreparedStatement pstmt = con.prepareStatement(updateAvailabilityQuery)) {
+                pstmt.setInt(1, reservation.getTicketCount());
+                pstmt.setInt(2, reservation.getEventId());
+                pstmt.setString(3, ticketType);
+                pstmt.executeUpdate();
+                System.out.println("Ticket availability successfully updated.");
+            }
+
+            // Step 3: Insert the reservation into the database
+            String insertReservationQuery = "INSERT INTO reservations (customer_id, event_id, ticket_count, payment_amount, reservation_date, ticket_type) VALUES (?, ?, ?, ?, ?, ?)";
+            try (PreparedStatement pstmt = con.prepareStatement(insertReservationQuery)) {
                 pstmt.setInt(1, reservation.getCustomerId());
                 pstmt.setInt(2, reservation.getEventId());
                 pstmt.setInt(3, reservation.getTicketCount());
                 pstmt.setFloat(4, reservation.getPaymentAmount());
                 pstmt.setTimestamp(5, reservation.getReservationDate());
+                pstmt.setString(6, ticketType);
                 pstmt.executeUpdate();
-                System.out.println("Reservation successfully added for Customer ID: " + reservation.getCustomerId());
+                System.out.println("Reservation successfully added.");
             }
 
-            // Deduct payment amount from customer's balance
+            // Step 4: Deduct payment amount from customer's balance
             String updateBalanceQuery = "UPDATE customers SET balance = balance - ? WHERE customer_id = ?";
             try (PreparedStatement pstmt = con.prepareStatement(updateBalanceQuery)) {
                 pstmt.setFloat(1, reservation.getPaymentAmount());
@@ -101,10 +151,10 @@ public class EditReservationsTable {
                 System.out.println("Balance successfully updated for Customer ID: " + reservation.getCustomerId());
             }
 
-            con.commit(); // Commit transaction
-            System.out.println("Transaction committed successfully for reservation: " + reservationToJSON(reservation));
+            con.commit(); // Commit the transaction
+            System.out.println("Transaction committed successfully for reservation.");
         } catch (SQLException ex) {
-            System.err.println("Error adding reservation or updating balance: " + ex.getMessage());
+            System.err.println("Error during reservation creation: " + ex.getMessage());
             throw new RuntimeException("Database error: " + ex.getMessage(), ex);
         }
     }
@@ -113,7 +163,7 @@ public class EditReservationsTable {
         ArrayList<Reservation> reservations = new ArrayList<>();
         String query = "SELECT * FROM reservations";
 
-        // Create a Gson instance with the custom deserializer
+        // Create a Gson instance with the custom deserializer for Reservation
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Reservation.class, new JsonDeserializer<Reservation>() {
                     @Override
@@ -130,6 +180,11 @@ public class EditReservationsTable {
                         // Parse the reservation date
                         String dateStr = jsonObject.get("reservation_date").getAsString();
                         reservation.setReservationDate(Timestamp.valueOf(dateStr.replace("T", " ").replace("Z", "")));
+
+                        // Parse ticket_type and set it
+                        if (jsonObject.has("ticket_type")) {
+                            reservation.setTicketType(jsonObject.get("ticket_type").getAsString());
+                        }
 
                         return reservation;
                     }

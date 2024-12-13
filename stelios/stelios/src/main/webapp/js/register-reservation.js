@@ -5,73 +5,33 @@ function submitReservationAndCreate() {
         "reservationDate": formatDateTime(document.getElementById("reservationDate").value),
         "paymentAmount": parseFloat(document.getElementById("paymentAmount").value),
         "customerEmail": document.getElementById("customerEmail").value.trim(),
-        "eventID": parseInt(document.getElementById("eventID").value)
+        "eventID": parseInt(document.getElementById("eventID").value),
+        "ticketType": document.getElementById("ticketType").value // Ensure ticketType is included
     };
 
     // Validate form data
-    if (!formData.ticketCount || isNaN(formData.ticketCount) || formData.ticketCount <= 0) {
-        alert("Ticket count must be a positive number!");
+    if (!formData.ticketType) {
+        alert("Please select a ticket type!");
         return;
     }
 
-    if (!formData.reservationDate) {
-        alert("Reservation date is required!");
-        return;
-    }
+    console.log("Sending JSON:", JSON.stringify(formData));
 
-    if (!formData.paymentAmount || isNaN(formData.paymentAmount) || formData.paymentAmount <= 0) {
-        alert("Payment amount must be a positive number!");
-        return;
-    }
-
-    if (!formData.customerEmail) {
-        alert("Customer email is required!");
-        return;
-    }
-
-    if (!formData.eventID || isNaN(formData.eventID)) {
-        alert("Please select a valid event!");
-        return;
-    }
-
-    // Fetch the customer ID using the email
+    // Fetch customer ID and call createReservation as before
     var xhr = new XMLHttpRequest();
     xhr.open('GET', `GetCustomerByEmail?email=${encodeURIComponent(formData.customerEmail)}`, true);
     xhr.onload = function () {
-        console.log("GetCustomerByEmail response status:", xhr.status);
-        console.log("GetCustomerByEmail response text:", xhr.responseText);
-
         if (xhr.status === 200) {
-            try {
-                // Extract customerId directly from the response
-                var response = JSON.parse(xhr.responseText);
-                var customerId = response.customer_id || response.customerId; // Handle both naming conventions
-                console.log("Fetched Customer ID:", customerId);
-
-                if (customerId > 0) {
-                    // Add customer ID to the form data
-                    formData.customerID = customerId;
-                    console.log("Form Data with Customer ID:", formData);
-
-                    // Proceed to create the reservation
-                    createReservation(formData);
-                } else {
-                    alert("No valid customer found with the provided email.");
-                }
-            } catch (e) {
-                console.error("Error parsing customer JSON:", e);
-                alert("An error occurred while processing customer data.");
-            }
-        } else if (xhr.status === 404) {
-            alert("Error: Customer not found.");
+            var response = JSON.parse(xhr.responseText);
+            formData.customerID = response.customer_id; // Add customerID to formData
+            createReservation(formData);
         } else {
-            alert(`Error fetching customer data: ${xhr.responseText}`);
+            alert("Error fetching customer data: " + xhr.responseText);
         }
     };
 
     xhr.onerror = function () {
-        console.error("Request failed for GetCustomerByEmail.");
-        alert("An error occurred while trying to fetch customer data.");
+        alert("An error occurred while fetching customer data.");
     };
 
     xhr.send();
@@ -83,23 +43,17 @@ function createReservation(formData) {
     xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
 
     xhr.onload = function () {
-        console.log("CreateReservation response status:", xhr.status);
-        console.log("CreateReservation response text:", xhr.responseText);
-
         if (xhr.status === 200) {
-            alert("Reservation successfully created");
-            console.log("Response JSON:", xhr.responseText);
+            alert("Reservation successfully created.");
         } else {
-            alert(`An error occurred while creating the reservation: ${xhr.responseText}`);
+            alert("Error creating reservation: " + xhr.responseText);
         }
     };
 
     xhr.onerror = function () {
-        console.error("Request failed for CreateReservation.");
-        alert("An error occurred while trying to create the reservation.");
+        alert("An error occurred while creating the reservation.");
     };
 
-    console.log("Sending JSON:", JSON.stringify(formData));
     xhr.send(JSON.stringify(formData));
 }
 

@@ -18,6 +18,7 @@ import java.io.PrintWriter;
 import java.sql.Timestamp;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 @WebServlet(name = "CreateReservation", urlPatterns = {"/CreateReservation"})
 public class CreateReservation extends HttpServlet {
 
@@ -62,7 +63,8 @@ public class CreateReservation extends HttpServlet {
                     newReservation.getEventId() <= 0 ||
                     newReservation.getTicketCount() <= 0 ||
                     newReservation.getPaymentAmount() <= 0 ||
-                    newReservation.getReservationDate() == null) {
+                    newReservation.getReservationDate() == null ||
+                    newReservation.getTicketType() == null || newReservation.getTicketType().isEmpty()) { // Added ticketType validation
                 response.setStatus(400); // Bad request
                 out.write("Missing or invalid required fields.");
                 return;
@@ -82,8 +84,11 @@ public class CreateReservation extends HttpServlet {
                     return;
                 }
 
+                // Extract ticketType and pass it to addReservation
+                String ticketType = newReservation.getTicketType();
+
                 // Proceed with reservation creation and balance deduction
-                ert.addReservation(newReservation);
+                ert.addReservation(newReservation, ticketType);  // Pass ticketType as the second argument
 
                 // Success response
                 response.setStatus(200);

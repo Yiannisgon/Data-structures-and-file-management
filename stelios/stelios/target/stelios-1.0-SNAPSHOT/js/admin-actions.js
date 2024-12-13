@@ -476,7 +476,7 @@ function createTableReservation(reservation) {
     html += '<tr><th colspan="2">Reservation ID: ' + reservation.reservationId + '</th></tr>';
 
     // Include keys and their values dynamically
-    var includeKeys = ['customerID', 'eventID', 'ticketCount', 'paymentAmount', 'reservationDate'];
+    var includeKeys = ['customerID', 'eventID', 'ticketCount', 'paymentAmount', 'reservationDate', 'ticketType'];  // Added 'ticketType' here
     includeKeys.forEach(function (key) {
         if (reservation.hasOwnProperty(key) && reservation[key] !== null) {
             var value = reservation[key];
@@ -520,3 +520,16 @@ function showAllTickets() {
     toggleDisplay('eventListModal');
 }
 
+function getTotalRevenue() {
+    fetch('/totalRevenue')  // Call the servlet
+        .then(response => response.text())  // Parse response as text
+        .then(data => {
+            // Display the total revenue in the div
+            document.getElementById('totalRevenueDisplay').innerHTML =
+                "<h3>Total Revenue:</h3><pre>" + data + "</pre>";
+        })
+        .catch(error => {
+            console.error('Error fetching total revenue:', error);
+            alert('Error fetching total revenue: ' + error);
+        });
+}

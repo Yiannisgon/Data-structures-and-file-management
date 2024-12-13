@@ -210,26 +210,26 @@ public class Resources {
     static String event4 = "{\"name\":\"Mr.Farts Live\",\"capacity\":150,\"date\":\"Feb 5, 2025\",\"time\":\"08:00:00 PM\",\"type\":\"Concert\"}";
     static String event5 = "{\"name\":\"Search for Saddam Hussein\",\"capacity\":50,\"date\":\"Mar 10, 2025\",\"time\":\"06:00:00 PM\",\"type\":\"Theater\"}";
 
-    static String reservation1 = "{\"customerID\":1,\"eventID\":1,\"ticketCount\":1,\"paymentAmount\":10.00,\"reservationDate\":\"2023-08-11T16:10:10Z\"}";
-    static String reservation2 = "{\"customerID\":2,\"eventID\":1,\"ticketCount\":2,\"paymentAmount\":10.00,\"reservationDate\":\"2023-08-12T10:00:00Z\"}";
-    static String reservation3 = "{\"customerID\":3,\"eventID\":2,\"ticketCount\":1,\"paymentAmount\":20.00,\"reservationDate\":\"2023-08-13T15:00:00Z\"}";
-    static String reservation4 = "{\"customerID\":4,\"eventID\":2,\"ticketCount\":3,\"paymentAmount\":30.00,\"reservationDate\":\"2023-08-14T12:00:00Z\"}";
-    static String reservation5 = "{\"customerID\":5,\"eventID\":3,\"ticketCount\":1,\"paymentAmount\":50.00,\"reservationDate\":\"2023-08-15T11:00:00Z\"}";
-    static String reservation6 = "{\"customerID\":6,\"eventID\":3,\"ticketCount\":2,\"paymentAmount\":50.00,\"reservationDate\":\"2023-08-16T14:00:00Z\"}";
-    static String reservation7 = "{\"customerID\":7,\"eventID\":4,\"ticketCount\":1,\"paymentAmount\":15.00,\"reservationDate\":\"2023-08-17T16:00:00Z\"}";
-    static String reservation8 = "{\"customerID\":8,\"eventID\":4,\"ticketCount\":4,\"paymentAmount\":40.00,\"reservationDate\":\"2023-08-18T18:00:00Z\"}";
-    static String reservation9 = "{\"customerID\":9,\"eventID\":5,\"ticketCount\":1,\"paymentAmount\":30.00,\"reservationDate\":\"2023-08-19T19:00:00Z\"}";
-    static String reservation10 = "{\"customerID\":10,\"eventID\":5,\"ticketCount\":3,\"paymentAmount\":45.00,\"reservationDate\":\"2023-08-20T20:00:00Z\"}";
-    static String reservation11 = "{\"customerID\":11,\"eventID\":1,\"ticketCount\":2,\"paymentAmount\":20.00,\"reservationDate\":\"2023-08-21T10:00:00Z\"}";
-    static String reservation12 = "{\"customerID\":12,\"eventID\":2,\"ticketCount\":1,\"paymentAmount\":10.00,\"reservationDate\":\"2023-08-22T11:00:00Z\"}";
-    static String reservation13 = "{\"customerID\":13,\"eventID\":3,\"ticketCount\":1,\"paymentAmount\":25.00,\"reservationDate\":\"2023-08-23T12:00:00Z\"}";
-    static String reservation14 = "{\"customerID\":14,\"eventID\":4,\"ticketCount\":1,\"paymentAmount\":15.00,\"reservationDate\":\"2023-08-24T13:00:00Z\"}";
-    static String reservation15 = "{\"customerID\":15,\"eventID\":5,\"ticketCount\":2,\"paymentAmount\":30.00,\"reservationDate\":\"2023-08-25T14:00:00Z\"}";
-    static String reservation16 = "{\"customerID\":1,\"eventID\":2,\"ticketCount\":1,\"paymentAmount\":20.00,\"reservationDate\":\"2023-08-26T15:00:00Z\"}";
-    static String reservation17 = "{\"customerID\":2,\"eventID\":3,\"ticketCount\":1,\"paymentAmount\":50.00,\"reservationDate\":\"2023-08-27T16:00:00Z\"}";
-    static String reservation18 = "{\"customerID\":3,\"eventID\":4,\"ticketCount\":1,\"paymentAmount\":15.00,\"reservationDate\":\"2023-08-28T17:00:00Z\"}";
-    static String reservation19 = "{\"customerID\":4,\"eventID\":5,\"ticketCount\":1,\"paymentAmount\":30.00,\"reservationDate\":\"2023-08-29T18:00:00Z\"}";
-    static String reservation20 = "{\"customerID\":5,\"eventID\":1,\"ticketCount\":1,\"paymentAmount\":10.00,\"reservationDate\":\"2023-08-30T19:00:00Z\"}";
+    static String reservation1 = "{\"customerID\":1,\"eventID\":1,\"ticketCount\":1,\"paymentAmount\":10.00,\"reservationDate\":\"2023-08-11T16:10:10Z\",\"ticketType\":\"VIP\"}";
+    static String reservation2 = "{\"customerID\":2,\"eventID\":1,\"ticketCount\":2,\"paymentAmount\":10.00,\"reservationDate\":\"2023-08-12T10:00:00Z\",\"ticketType\":\"GeneralAdmission\"}";
+    static String reservation3 = "{\"customerID\":3,\"eventID\":2,\"ticketCount\":1,\"paymentAmount\":20.00,\"reservationDate\":\"2023-08-13T15:00:00Z\",\"ticketType\":\"VIP\"}";
+    static String reservation4 = "{\"customerID\":4,\"eventID\":2,\"ticketCount\":3,\"paymentAmount\":30.00,\"reservationDate\":\"2023-08-14T12:00:00Z\",\"ticketType\":\"GeneralAdmission\"}";
+    static String reservation5 = "{\"customerID\":5,\"eventID\":3,\"ticketCount\":1,\"paymentAmount\":50.00,\"reservationDate\":\"2023-08-15T11:00:00Z\",\"ticketType\":\"VIP\"}";
+    static String reservation6 = "{\"customerID\":6,\"eventID\":3,\"ticketCount\":2,\"paymentAmount\":50.00,\"reservationDate\":\"2023-08-16T14:00:00Z\",\"ticketType\":\"GeneralAdmission\"}";
+    static String reservation7 = "{\"customerID\":7,\"eventID\":4,\"ticketCount\":1,\"paymentAmount\":15.00,\"reservationDate\":\"2023-08-17T16:00:00Z\",\"ticketType\":\"VIP\"}";
+    static String reservation8 = "{\"customerID\":8,\"eventID\":4,\"ticketCount\":4,\"paymentAmount\":40.00,\"reservationDate\":\"2023-08-18T18:00:00Z\",\"ticketType\":\"GeneralAdmission\"}";
+    static String reservation9 = "{\"customerID\":9,\"eventID\":5,\"ticketCount\":1,\"paymentAmount\":30.00,\"reservationDate\":\"2023-08-19T19:00:00Z\",\"ticketType\":\"VIP\"}";
+    static String reservation10 = "{\"customerID\":10,\"eventID\":5,\"ticketCount\":3,\"paymentAmount\":45.00,\"reservationDate\":\"2023-08-20T20:00:00Z\",\"ticketType\":\"GeneralAdmission\"}";
+    static String reservation11 = "{\"customerID\":11,\"eventID\":1,\"ticketCount\":2,\"paymentAmount\":20.00,\"reservationDate\":\"2023-08-21T10:00:00Z\",\"ticketType\":\"VIP\"}";
+    static String reservation12 = "{\"customerID\":12,\"eventID\":2,\"ticketCount\":1,\"paymentAmount\":10.00,\"reservationDate\":\"2023-08-22T11:00:00Z\",\"ticketType\":\"GeneralAdmission\"}";
+    static String reservation13 = "{\"customerID\":13,\"eventID\":3,\"ticketCount\":1,\"paymentAmount\":25.00,\"reservationDate\":\"2023-08-23T12:00:00Z\",\"ticketType\":\"VIP\"}";
+    static String reservation14 = "{\"customerID\":14,\"eventID\":4,\"ticketCount\":1,\"paymentAmount\":15.00,\"reservationDate\":\"2023-08-24T13:00:00Z\",\"ticketType\":\"GeneralAdmission\"}";
+    static String reservation15 = "{\"customerID\":15,\"eventID\":5,\"ticketCount\":2,\"paymentAmount\":30.00,\"reservationDate\":\"2023-08-25T14:00:00Z\",\"ticketType\":\"VIP\"}";
+    static String reservation16 = "{\"customerID\":1,\"eventID\":2,\"ticketCount\":1,\"paymentAmount\":20.00,\"reservationDate\":\"2023-08-26T15:00:00Z\",\"ticketType\":\"GeneralAdmission\"}";
+    static String reservation17 = "{\"customerID\":2,\"eventID\":3,\"ticketCount\":1,\"paymentAmount\":50.00,\"reservationDate\":\"2023-08-27T16:00:00Z\",\"ticketType\":\"VIP\"}";
+    static String reservation18 = "{\"customerID\":3,\"eventID\":4,\"ticketCount\":1,\"paymentAmount\":15.00,\"reservationDate\":\"2023-08-28T17:00:00Z\",\"ticketType\":\"GeneralAdmission\"}";
+    static String reservation19 = "{\"customerID\":4,\"eventID\":5,\"ticketCount\":1,\"paymentAmount\":30.00,\"reservationDate\":\"2023-08-29T18:00:00Z\",\"ticketType\":\"VIP\"}";
+    static String reservation20 = "{\"customerID\":5,\"eventID\":1,\"ticketCount\":1,\"paymentAmount\":10.00,\"reservationDate\":\"2023-08-30T19:00:00Z\",\"ticketType\":\"GeneralAdmission\"}";
 
     // Event 1 (Movie Festival - Theater)
     static String ticket1 = "{\"price\":10.0,\"availability\":10,\"type\":\"VIP\",\"event_id\":1}";
