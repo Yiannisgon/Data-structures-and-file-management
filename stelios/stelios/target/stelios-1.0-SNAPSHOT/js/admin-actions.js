@@ -1,18 +1,19 @@
 function logout() {
     window.location.href = 'index.html'; // Redirect to the login page
 }
+
 function initDB() {
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             console.log("Successful Initialization");
-        } else if (xhr.status !== 200) {
-            console.log("Error Occured");
+        } else {
+            console.error("Error Occurred");
         }
     };
 
     xhr.open('GET', 'InitDB');
-    xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhr.send();
 }
 
@@ -21,110 +22,16 @@ function deleteDB() {
     xhr.onload = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             console.log("Successful Deletion");
-        } else if (xhr.status !== 200) {
-            console.log("Error Occured");
+        } else {
+            console.error("Error Occurred");
         }
     };
 
     xhr.open('GET', 'DeleteDB');
-    xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded');
-    xhr.send();
-}
-// Function to get petKeepers data and update the #keepersList div
-function getKeepers() {
-    var xhr = new XMLHttpRequest();
-    xhr.onload = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            // Parse the JSON response
-            var keepers = JSON.parse(xhr.responseText);
-
-            // Create HTML content for each keeper using createTableKeeper function
-            var keepersListContent = '';
-            keepers.forEach(function(keeper) {
-                keepersListContent += createTableUser(keeper);
-            });
-
-            // Update the #keepersList div with the keeper data
-            $("#keeperList").html(keepersListContent);
-        } else if (xhr.status !== 200) {
-            // Handle errors here, such as displaying a message to the user
-            $("#keeperList").html("Could not retrieve keepers data.");
-        }
-    };
-
-    xhr.open('GET', 'Users?type=keeper');
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhr.send();
 }
 
-// Function to get owners data and update the #ownersList div
-function getOwners() {
-    var xhr = new XMLHttpRequest();
-    xhr.onload = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            // Parse the JSON response
-            var owners = JSON.parse(xhr.responseText);
-
-            // Create HTML content for each owner using createTableOwner function
-            var ownersListContent = '';
-            owners.forEach(function(owner) {
-                ownersListContent += createTableUser(owner);
-            });
-
-            // Update the #ownersList div with the owner data
-            $("#ownerList").html("");
-            $("#ownerList").html(ownersListContent);
-        } else if (xhr.status !== 200) {
-            // Handle errors here, such as displaying a message to the user
-            $("#ownerList").html("Could not retrieve owners data.");
-        }
-    };
-
-    xhr.open('GET', 'Users?type=owner'); // Replace 'GetOwners' with your actual endpoint
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.send();
-}
-
-// Modified showAllUsers function
-function showAllUsers() {
-    // Call getKeepers and getOwners to retrieve and display data
-    getKeepers();
-    getOwners();
-    // Toggle the modal display
-    toggleDisplay('userListModal');
-}
-
-
-// Modified showStatistics function
-function showStatistics() {
-    // Fetch and prepare data if not already fetched
-    if (Object.keys(globalStatisticsData).length === 0) {
-        fetchStatisticsData();
-    } else {
-        // Toggle display for each chart
-        toggleDisplay('catDogChart');
-        toggleDisplay('ownerKeeperChart');
-        toggleDisplay('earningsChart');
-    }
-}
-// New function to fetch statistics data
-function fetchStatisticsData() {
-    var xhr = new XMLHttpRequest();
-    xhr.onload = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            // Parse the entire JSON response
-            globalStatisticsData = JSON.parse(xhr.responseText);
-            // Now draw each chart
-            drawCatDogChart();
-            drawOwnerKeeperChart();
-            drawEarningsChart();
-        } else if (xhr.status !== 200) {
-            console.error("Error fetching statistics data");
-        }
-    };
-    xhr.open('GET', 'Stats');
-    xhr.send();
-}
 function toggleDisplay(elementId) {
     var element = document.getElementById(elementId);
     if (element.style.display === "none" || element.style.display === '') {
@@ -135,185 +42,22 @@ function toggleDisplay(elementId) {
 }
 
 function closeModal() {
-    // Close the modal
-    const modal = document.getElementById('userListModal');
-    modal.style.display = 'none';
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => modal.style.display = 'none');
 }
 
 // Close the modal if the user clicks outside of it
-window.onclick = function(event) {
-    const modal = document.getElementById('userListModal');
-    if (event.target === modal) {
-        modal.style.display = 'none';
-    }
+window.onclick = function (event) {
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
 };
 
-function createTableUser(user) {
-    var html = '<table>';
-    html += '<tr><th colspan="2">' + user.firstname + ' ' + user.lastname + '</th></tr>';
-
-    // Determine the ID and type field to use (keeper_id/owner_id and type)
-    var idField = user.keeper_id || user.owner_id;
-    var userType = user.keeper_id ? 'keeper' : 'owner';
-    var username;
-    if (idField) {
-        html += '<tr><td>user id</td><td>' + idField + '</td></tr>';
-    }
-
-    var includeKeys = ['firstname', 'lastname', 'username'];
-    includeKeys.forEach(function(key) {
-        if (user.hasOwnProperty(key) && user[key] !== null) {
-            var value = user[key];
-            if(key==="username") {
-                username  = value;
-            }
-            html += '<tr><td>' + key + '</td><td>' + value + '</td></tr>';
-        }
-    });
-
-    // Add delete user button with ID and type
-    //html += '<tr><td colspan="2"><button onclick="deleteUser(\'' + username + '\')">Delete User</button></td></tr>';
-    html += '<tr><td colspan="2"><button onclick="deleteUser(\'' + idField + '\', \'' + userType + '\')">Delete User</button></td></tr>';
-    html += '</table><br>';
-    return html;
-}
-
-
-
-function deleteUser(userId, userType) {
-    var xhr = new XMLHttpRequest();
-    xhr.onload = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            console.log("User deleted: " + userId);
-            // After successful deletion, refresh the keeper and owner lists
-            getKeepers();
-            getOwners();
-        } else if (xhr.status !== 200) {
-            console.error("Error deleting user: " + userId);
-        }
-    };
-
-    // Adjust the URL to include user ID and type
-    var url = 'DeleteUser?id=' + userId + '&type=' + userType;
-    xhr.open('GET', url);
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.send();
-}
-
-
-// Load Google Charts
-google.charts.load('current', {'packages':['corechart']});
-// Assume global data object that will hold the fetched data
-var globalStatisticsData = {};
-
-function showStatistics() {
-    var xhr = new XMLHttpRequest();
-    xhr.onload = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            // Parse the entire JSON response
-            globalStatisticsData = JSON.parse(xhr.responseText);
-            // Now draw each chart
-            drawCatDogChart();
-            drawOwnerKeeperChart();
-            drawEarningsChart();
-        } else if (xhr.status !== 200) {
-            console.error("Error fetching statistics data");
-        }
-    };
-    xhr.open('GET', 'Stats');
-    xhr.send();
-}
-
-function drawCatDogChart() {
-    // Process pets data to count cats and dogs
-    var pets = globalStatisticsData.pets;
-    var catNum = pets.filter(pet => pet.type === 'cat').length;
-    var dogNum = pets.filter(pet => pet.type === 'dog').length;
-
-    // Create the data table
-    var data = google.visualization.arrayToDataTable([
-        ['Pet Type', 'Number'],
-        ['Cats', catNum],
-        ['Dogs', dogNum]
-    ]);
-
-    // Chart options
-    var options = {
-        title: 'Number of Cats and Dogs',
-        // ... other options ...
-    };
-
-    // Draw the chart
-    var chart = new google.visualization.PieChart(document.getElementById('catDogChart'));
-    chart.draw(data, options);
-}
-
-function drawOwnerKeeperChart() {
-    // Process owners and keepers data
-    var ownersNum = globalStatisticsData.owners.length;
-    var keepersNum = globalStatisticsData.keepers.length;
-
-    // Create the data table
-    var data = google.visualization.arrayToDataTable([
-        ['User Type', 'Number'],
-        ['Pet Owners', ownersNum],
-        ['Pet Keepers', keepersNum]
-    ]);
-
-    // Chart options
-    var options = {
-        title: 'Number of Pet Owners and Pet Keepers',
-        // ... other options ...
-    };
-
-    // Draw the chart
-    var chart = new google.visualization.PieChart(document.getElementById('ownerKeeperChart'));
-    chart.draw(data, options);
-}
-
-function drawEarningsChart() {
-    // We assume globalStatisticsData is already defined and populated
-    var {keepersEarnings, appEarnings} = calculateEarnings(globalStatisticsData.bookings);
-
-    // Create the data table
-    var data = google.visualization.arrayToDataTable([
-        ['Source', 'Earnings'],
-        ['Keepers', keepersEarnings],
-        ['App', appEarnings]
-    ]);
-
-    // Chart options
-    var options = {
-        title: 'Money Earned by Each Keeper and by the App',
-        // ... other options ...
-    };
-
-    var chart = new google.visualization.PieChart(document.getElementById('earningsChart'));
-    chart.draw(data, options);
-}
-
-function calculateEarnings(bookings) {
-    let totalEarnings = 0;
-    if (!bookings) {
-        console.error('bookings is undefined');
-        return {keepersEarnings: 0, appEarnings: 0};
-    }
-    // Calculate total earnings from finished bookings
-    bookings.forEach(booking => {
-        if(booking.status === 'finished') {
-            totalEarnings += booking.price;
-        }
-    });
-
-    // Calculate earnings for keepers and app
-    const keepersEarnings = totalEarnings * 0.85;
-    const appEarnings = totalEarnings * 0.15;
-
-    return {keepersEarnings, appEarnings};
-}
-
 function CreateUser() {
-    window.location.href = 'user_register.html'; // Change 'register.html' to your actual registration page URL
+    window.location.href = 'user_register.html';
 }
 
 function showAllEvents() {
@@ -321,33 +65,17 @@ function showAllEvents() {
     toggleDisplay('eventListModal');
 }
 
-function toggleDisplay(elementId) {
-    var element = document.getElementById(elementId);
-    if (element.style.display === 'none' || element.style.display === '') {
-        element.style.display = 'block';
-    } else {
-        element.style.display = 'none';
-    }
-}
-
-
 function getEvents() {
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            // Parse the JSON response
             var events = JSON.parse(xhr.responseText);
-
-            // Create HTML content for each event using createTableEvent function
             var eventListContent = '';
-            events.forEach(function(event) {
+            events.forEach(function (event) {
                 eventListContent += createTableEvent(event);
             });
-
-            // Update the #eventList div with the event data
             document.getElementById("eventList").innerHTML = eventListContent;
-        } else if (xhr.status !== 200) {
-            // Handle errors here, such as displaying a message to the user
+        } else {
             document.getElementById("eventList").innerHTML = "Could not retrieve events data.";
         }
     };
@@ -357,38 +85,27 @@ function getEvents() {
     xhr.send();
 }
 
-// Function to open the Create Event page
-function CreateEvent() {
-    window.open('new-event.html', '_blank'); // Opens in a new tab
-}
-
 function createTableEvent(event) {
     var html = '<table>';
-    html += '<tr><th colspan="2">' + event.name + '</th></tr>';
+    html += `<tr><th colspan="2">${event.name}</th></tr>`;
 
-    // Add event_id if present
-    if (event.hasOwnProperty('event_id') && event.event_id !== null) {
-        html += '<tr><td>Event ID</td><td>' + event.event_id + '</td></tr>';
+    if (event.event_id) {
+        html += `<tr><td>Event ID</td><td>${event.event_id}</td></tr>`;
     }
 
-    // Include keys and their values dynamically
-    var includeKeys = ['name', 'capacity', 'date', 'time', 'type'];
-    includeKeys.forEach(function(key) {
-        if (event.hasOwnProperty(key) && event[key] !== null) {
-            var value = event[key];
-            html += '<tr><td>' + key.charAt(0).toUpperCase() + key.slice(1) + '</td><td>' + value + '</td></tr>';
+    ['name', 'capacity', 'date', 'time', 'type'].forEach(function (key) {
+        if (event[key]) {
+            html += `<tr><td>${key.charAt(0).toUpperCase() + key.slice(1)}</td><td>${event[key]}</td></tr>`;
         }
     });
 
-    // Add delete event button with event_id
-    html += '<tr><td colspan="2"><button onclick="deleteEvent(' + event.event_id + ')">Delete Event</button></td></tr>';
+    html += `<tr><td colspan="2"><button onclick="deleteEvent(${event.event_id})">Delete Event</button></td></tr>`;
     html += '</table><br>';
     return html;
 }
 
 function deleteEvent(eventId) {
     if (!eventId || isNaN(eventId)) {
-        console.error("Invalid event ID:", eventId);
         alert("Invalid Event ID!");
         return;
     }
@@ -397,104 +114,59 @@ function deleteEvent(eventId) {
     xhr.onload = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             console.log("Event deleted: " + eventId);
-            getEvents(); // Refresh the event list
-        } else if (xhr.status !== 200) {
-            console.error("Error deleting event: " + eventId, xhr.responseText);
+            getEvents();
+        } else {
+            console.error("Error deleting event: " + eventId);
         }
     };
 
-    var url = 'DeleteEvent?event_id=' + eventId; // Updated parameter name to 'event_id'
-    console.log("Request URL:", url); // Log the URL for debugging
-    xhr.open('GET', url);
+    xhr.open('GET', `DeleteEvent?event_id=${eventId}`);
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhr.send();
 }
+
 function showAllReservations() {
     getReservations();
-    toggleDisplay('eventListModal');
+    toggleDisplay('reservationListModal');
 }
 
-// Function to get reservations
 function getReservations() {
-    console.log("Starting getReservations function...");
-
     var xhr = new XMLHttpRequest();
-    console.log("Created XMLHttpRequest object.");
-
     xhr.onload = function () {
-        console.log("XHR onload triggered.");
-        console.log("XHR readyState: ", xhr.readyState);
-        console.log("XHR status: ", xhr.status);
-
         if (xhr.readyState === 4 && xhr.status === 200) {
-            console.log("XHR response received successfully.");
-            console.log("Response text: ", xhr.responseText);
-
-            try {
-                // Parse the JSON response
-                var reservations = JSON.parse(xhr.responseText);
-                console.log("Parsed reservations JSON: ", reservations);
-
-                // Log each reservation
-                reservations.forEach(function (reservation, index) {
-                    console.log("Reservation at index " + index + ": ", reservation);
-                });
-
-                // Create HTML content for each reservation
-                var reservationListContent = '';
-                reservations.forEach(function (reservation) {
-                    reservationListContent += createTableReservation(reservation);
-                });
-
-                // Update the #reservationList div
-                document.getElementById("reservationList").innerHTML = reservationListContent;
-                console.log("Reservation list content updated in the DOM.");
-            } catch (error) {
-                console.error("Error parsing reservations JSON: ", error);
-                document.getElementById("reservationList").innerHTML = "Error parsing reservations data.";
-            }
-        } else if (xhr.status !== 200) {
-            console.error("Failed to fetch reservations. HTTP Status: ", xhr.status);
+            var reservations = JSON.parse(xhr.responseText);
+            var reservationListContent = '';
+            reservations.forEach(function (reservation) {
+                reservationListContent += createTableReservation(reservation);
+            });
+            document.getElementById("reservationList").innerHTML = reservationListContent;
+        } else {
             document.getElementById("reservationList").innerHTML = "Could not retrieve reservations data.";
         }
     };
 
-    xhr.onerror = function () {
-        console.error("XHR encountered an error.");
-        document.getElementById("reservationList").innerHTML = "Failed to retrieve reservations data.";
-    };
-
     xhr.open('GET', 'GetReservations');
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    console.log("Sending XHR request...");
     xhr.send();
 }
 
-// Function to create a reservation table
 function createTableReservation(reservation) {
     var html = '<table>';
-    html += '<tr><th colspan="2">Reservation ID: ' + reservation.reservationId + '</th></tr>';
+    html += `<tr><th colspan="2">Reservation ID: ${reservation.reservationId}</th></tr>`;
 
-    // Include keys and their values dynamically
-    var includeKeys = ['customerID', 'eventID', 'ticketCount', 'paymentAmount', 'reservationDate', 'ticketType'];  // Added 'ticketType' here
-    includeKeys.forEach(function (key) {
-        if (reservation.hasOwnProperty(key) && reservation[key] !== null) {
-            var value = reservation[key];
-            html += '<tr><td>' + key.replace(/([A-Z])/g, ' $1').trim() + '</td><td>' + value + '</td></tr>';
+    ['customerID', 'eventID', 'ticketCount', 'paymentAmount', 'reservationDate', 'ticketType'].forEach(function (key) {
+        if (reservation[key]) {
+            html += `<tr><td>${key.replace(/([A-Z])/g, ' $1').trim()}</td><td>${reservation[key]}</td></tr>`;
         }
     });
 
-    // Add delete reservation button with reservationId
-    html += '<tr><td colspan="2"><button onclick="deleteReservation(' + reservation.reservationId + ')">Delete Reservation</button></td></tr>';
+    html += `<tr><td colspan="2"><button onclick="deleteReservation(${reservation.reservationId})">Delete Reservation</button></td></tr>`;
     html += '</table><br>';
     return html;
 }
 
-
-// Function to delete a reservation
 function deleteReservation(reservationId) {
     if (!reservationId || isNaN(reservationId)) {
-        console.error("Invalid reservation ID:", reservationId);
         alert("Invalid Reservation ID!");
         return;
     }
@@ -503,43 +175,78 @@ function deleteReservation(reservationId) {
     xhr.onload = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             console.log("Reservation deleted: " + reservationId);
-            getReservations(); // Refresh the reservation list
-        } else if (xhr.status !== 200) {
-            console.error("Error deleting reservation: " + reservationId, xhr.responseText);
+            getReservations();
+        } else {
+            console.error("Error deleting reservation: " + reservationId);
         }
     };
 
-    var url = 'DeleteReservation?reservation_id=' + reservationId; // Updated parameter name to 'reservation_id'
-    console.log("Request URL:", url); // Log the URL for debugging
-    xhr.open('GET', url);
+    xhr.open('GET', `DeleteReservation?reservation_id=${reservationId}`);
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhr.send();
 }
+
 function showAllTickets() {
-    // getTickets();
-    toggleDisplay('eventListModal');
+    toggleDisplay('ticketListModal');
 }
 
-// Function to fetch total revenue using XMLHttpRequest
 function getTotalRevenue() {
-    var xhr = new XMLHttpRequest();  // Create a new XHR object
-    xhr.onload = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            // If request was successful, display the response in the HTML
-            document.getElementById('totalRevenueDisplay').innerHTML =
-                "<h3>Total Revenue:</h3><pre>" + xhr.responseText + "</pre>";
-        } else if (xhr.status !== 200) {
-            // Handle errors if the request fails
-            console.error("Error fetching total revenue:", xhr.status, xhr.responseText);
-            alert("Error fetching total revenue: " + xhr.responseText);
-        }
-    };
+    var revenueDisplay = document.getElementById("totalRevenueDisplay");
 
-    // The URL of the servlet that returns total revenue (you may need to update this)
-    var url = 'TotalRevenueServlet';
-    console.log("Request URL:", url); // Log the URL for debugging
+    if (revenueDisplay.style.display === "none" || revenueDisplay.style.display === "") {
+        revenueDisplay.style.display = "block";
 
-    xhr.open('GET', url, true);  // Open the request with the GET method
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');  // Set request header
-    xhr.send();  // Send the request
+        // Fetch revenue data
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    try {
+                        var revenueData = JSON.parse(xhr.responseText);
+
+                        // Extract refund income
+                        var refundIncome = revenueData.refundIncome || 0;
+
+                        // Calculate total income
+                        var totalIncome = Object.values(revenueData)
+                            .filter(value => typeof value === "number" && !isNaN(value))
+                            .reduce((sum, value) => sum + value, 0);
+
+                        // Construct the display content
+                        var revenueContent = "<h3>Total Revenue:</h3><ul>";
+                        for (var key in revenueData) {
+                            if (revenueData.hasOwnProperty(key) && key !== "refundIncome") {
+                                revenueContent += `<li>${key}: $${revenueData[key].toFixed(2)}</li>`;
+                            }
+                        }
+
+                        // Add refund income and total income
+                        revenueContent += `<li>Refund income: $${refundIncome.toFixed(2)}</li>`;
+                        revenueContent += `<li>Total income: $${totalIncome.toFixed(2)}</li>`;
+                        revenueContent += "</ul>";
+
+                        // Update the DOM
+                        revenueDisplay.innerHTML = revenueContent;
+                    } catch (error) {
+                        console.error("Error parsing revenue data:", error);
+                        revenueDisplay.innerHTML = "Error parsing revenue data.";
+                    }
+                } else {
+                    console.error("Failed to fetch revenue. HTTP Status:", xhr.status);
+                    revenueDisplay.innerHTML = "Error fetching revenue.";
+                }
+            }
+        };
+
+        xhr.onerror = function () {
+            console.error("XHR encountered an error.");
+            revenueDisplay.innerHTML = "Error fetching revenue.";
+        };
+
+        xhr.open("GET", "TotalRevenueServlet", true); // Ensure this URL matches your servlet's mapping
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.send();
+    } else {
+        revenueDisplay.style.display = "none";
+    }
 }

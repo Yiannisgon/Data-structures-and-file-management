@@ -1,5 +1,6 @@
 package servlets;
 
+import database.tables.EditReservationsTable;
 import database.tables.EditTicketsTable;
 import com.google.gson.Gson;
 
@@ -19,7 +20,7 @@ import java.util.logging.Logger;
 /**
  * Servlet to get the total revenue for all ticket types.
  */
-@WebServlet("/TotalRevenueServlet")  // This is the URL pattern for this servlet
+@WebServlet("/TotalRevenueServlet")
 public class TotalRevenueServlet extends HttpServlet {
 
     @Override
@@ -28,23 +29,26 @@ public class TotalRevenueServlet extends HttpServlet {
         response.setContentType("application/json;charset=UTF-8");
 
         try (PrintWriter out = response.getWriter()) {
-            // Create an instance of EditTicketsTable to access the database method
             EditTicketsTable editTicketsTable = new EditTicketsTable();
 
-            // Get the total revenue for all ticket types (returns a Map)
+            // Get the total revenue for all ticket types
             Map<String, Float> revenueMap = editTicketsTable.getTotalRevenueForAllTypes();
 
-            // Convert the revenue map to JSON using Gson
+            // Add the refund income to the response
+            float totalRefundTax = EditReservationsTable.getTotalRefundTax(); // Get the global refund tax tracker
+            revenueMap.put("refundIncome", totalRefundTax);
+
+            // Convert the map to JSON
             String json = new Gson().toJson(revenueMap);
 
-            // Send the JSON response
+            // Log and send the response
+            System.out.println("Total Revenue JSON: " + json);
             out.println(json);
-
-            response.setStatus(200);  // Set the status to 200 (OK)
+            response.setStatus(200);
         } catch (SQLException | ClassNotFoundException ex) {
-            // Log the error and send a 500 status in case of failure
             Logger.getLogger(TotalRevenueServlet.class.getName()).log(Level.SEVERE, null, ex);
-            response.setStatus(500);  // Internal Server Error
+            response.setStatus(500);
+            response.getWriter().write("{\"error\":\"Failed to fetch total revenue.\"}");
         }
     }
 }

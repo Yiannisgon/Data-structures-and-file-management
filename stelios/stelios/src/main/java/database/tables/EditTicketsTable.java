@@ -165,9 +165,9 @@ public class EditTicketsTable {
 
     // Method to get total revenue for both ticket types
     public Map<String, Float> getTotalRevenueForAllTypes() throws SQLException, ClassNotFoundException {
-        String query = "SELECT T.type AS TicketType, SUM(RT.ticket_count * T.price) AS TotalRevenue "
+        String query = "SELECT T.type AS TicketType, SUM(R.ticket_count * T.price) AS TotalRevenue "
                 + "FROM tickets T "
-                + "JOIN reservations RT ON T.ticket_id = RT.ticket_id "
+                + "JOIN reservations R ON T.event_id = R.event_id AND T.type = R.ticket_type "
                 + "GROUP BY T.type";
 
         Map<String, Float> revenueMap = new HashMap<>();
@@ -176,7 +176,6 @@ public class EditTicketsTable {
              Statement stmt = con.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
 
-            // Iterate through the result set and add the total revenue for each ticket type to the map
             while (rs.next()) {
                 String ticketType = rs.getString("TicketType");
                 float totalRevenue = rs.getFloat("TotalRevenue");

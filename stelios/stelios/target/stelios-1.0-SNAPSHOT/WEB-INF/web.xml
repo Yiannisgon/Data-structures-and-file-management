@@ -100,6 +100,15 @@
         <url-pattern>/GetTicketDetails</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>GetReservationsByEmail</servlet-name>
+        <servlet-class>servlets.GetReservationsByEmail</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GetReservationsByEmail</servlet-name>
+        <url-pattern>/GetReservationsByEmail</url-pattern>
+    </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>DeleteReservation</servlet-name>
         <url-pattern>/DeleteReservation</url-pattern>

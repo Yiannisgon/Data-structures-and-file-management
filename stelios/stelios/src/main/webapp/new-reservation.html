@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/keeperStyles.css">
+    <link rel="stylesheet" href="css/reserve.css">
     <title>New Reservation</title>
 </head>
 <body>
@@ -40,15 +40,18 @@
     </div>
 </form>
 
-<button onclick="showAllEvents()">Show All Events</button>
-<div id="eventListModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <h3>All Events</h3>
-        <div id="eventList"></div>
+<div class="container">
+    <h2>Cancel a Reservation</h2>
+
+    <label for="cancelReservationEmail">Customer Email:</label>
+    <input type="email" id="cancelReservationEmail" name="customerEmail" required>
+
+    <button type="button" onclick="getReservationsByEmail()">Show My Reservations</button>
+
+    <div id="reservationListContainer">
+        <!-- Reservations will be displayed here -->
     </div>
 </div>
 <script src="js/register-reservation.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>
 </html>

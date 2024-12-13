@@ -22,6 +22,11 @@ public class EditReservationsTable {
         return totalRefundTax;
     }
 
+    public static void resetTotalRefundTax() {
+        totalRefundTax = 0.0f;
+        System.out.println("Total refund tax has been reset.");
+    }
+
     public void addReservationFromJSON(String json) throws ClassNotFoundException {
         System.out.println("Starting to add reservation from JSON...");
         System.out.println("Received JSON: " + json);
@@ -302,4 +307,61 @@ public class EditReservationsTable {
         }
     }
 
+
+    public ArrayList<Reservation> getReservationsByEmail(String email) throws SQLException, ClassNotFoundException {
+        ArrayList<Reservation> reservations = new ArrayList<>();
+        String query = "SELECT r.* FROM reservations r "
+                + "JOIN customers c ON r.customer_id = c.customer_id "
+                + "WHERE c.email = ?";
+
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Reservation.class, new JsonDeserializer<Reservation>() {
+                    @Override
+                    public Reservation deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                        JsonObject jsonObject = json.getAsJsonObject();
+                        Reservation reservation = new Reservation();
+                        reservation.setReservationId(jsonObject.get("reservation_id").getAsInt());
+                        reservation.setCustomerId(jsonObject.get("customer_id").getAsInt());
+                        reservation.setEventId(jsonObject.get("event_id").getAsInt());
+                        reservation.setTicketCount(jsonObject.get("ticket_count").getAsInt());
+                        reservation.setPaymentAmount(jsonObject.get("payment_amount").getAsFloat());
+
+                        // Parse the reservation date
+                        String dateStr = jsonObject.get("reservation_date").getAsString();
+                        reservation.setReservationDate(Timestamp.valueOf(dateStr.replace("T", " ").replace("Z", "")));
+
+                        // Parse ticket_type and set it
+                        if (jsonObject.has("ticket_type")) {
+                            reservation.setTicketType(jsonObject.get("ticket_type").getAsString());
+                        }
+
+                        return reservation;
+                    }
+                })
+                .create();
+
+        try (Connection con = DB_Connection.getConnection();
+             PreparedStatement stmt = con.prepareStatement(query)) {
+            stmt.setString(1, email);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    // Convert the ResultSet row to JSON
+                    String json = DB_Connection.getResultsToJSON(rs);
+                    // Deserialize the JSON into a Reservation object
+                    try {
+                        Reservation reservation = gson.fromJson(json, Reservation.class);
+                        reservations.add(reservation);
+                    } catch (JsonParseException e) {
+                        System.err.println("Failed to parse reservation JSON: " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        return reservations;
+    }
+
+    
 }

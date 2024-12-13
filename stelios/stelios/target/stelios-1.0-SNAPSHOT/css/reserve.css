@@ -1,0 +1,93 @@
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background-image: url("../img/background.png");
+    background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.container {
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Form Styles */
+form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two equal columns */
+    grid-gap: 15px;
+    padding: 20px;
+    background: #e9ecef;
+    border-radius: 5px;
+}
+
+form label {
+    font-weight: bold;
+}
+
+form input, form select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 100%; /* Ensure inputs take full width */
+}
+
+form input[type="number"] {
+    max-width: 150px; /* Adjust width for numbers */
+}
+
+form button {
+    padding: 10px;
+    border: none;
+    background-color: #0275d8;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    grid-column: span 2; /* Span full width of form */
+    justify-self: center;
+}
+
+form button:hover {
+    background-color: #025aa5;
+}
+
+p {
+    margin: 10px 0;
+    text-align: center; /* Align messages in the center */
+}
+
+p strong {
+    color: #555;
+}
+
+#eventDateTime {
+    grid-column: span 2; /* Take up full width */
+    text-align: center; /* Center the content */
+}
+
+#balanceError {
+    grid-column: span 2;
+    text-align: center;
+    font-size: 0.9em;
+    color: red; /* Make errors red for visibility */
+}

@@ -6,6 +6,8 @@
 package servlets;
 
 import database.init.InitDatabase;
+import database.tables.EditReservationsTable;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -64,6 +66,11 @@ public class DeleteDB extends HttpServlet {
             response.setContentType("text/html;charset=UTF-8");
             InitDatabase init=new InitDatabase();
             init.dropDatabase();
+
+            // Reset refund income after deleting the database
+            EditReservationsTable.resetTotalRefundTax();
+            System.out.println("Database dropped, and refund income reset successfully.");
+
         } catch (SQLException ex) {
             response.sendError(500);
             Logger.getLogger(InitDB.class.getName()).log(Level.SEVERE, null, ex);

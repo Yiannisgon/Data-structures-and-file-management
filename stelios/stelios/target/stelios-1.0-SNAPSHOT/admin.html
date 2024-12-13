@@ -14,16 +14,26 @@
 
     <button onclick="initDB()">Init Database</button>
     <button onclick="deleteDB()">Delete Database</button>
+    <br>
+    <br>
+
     <button onclick="CreateUser()">Create User</button>
     <button onclick="CreateEvent()">Create Event</button>
+    <br>
+    <br>
+
     <button onclick="showAllEvents()">Show Events</button>
     <button onclick="showAllReservations()">Show Reservations</button>
     <button onclick="showAllTickets()">Show Tickets</button>
+    <br>
+    <br>
 
+    <!-- New button to fetch and display total revenue -->
+    <button onclick="getTotalRevenue()">Get Total Revenue</button>
     <button onclick="logout()">Logout</button>
+    <br>
+    <br>
 
-<!-- New button to fetch and display total revenue -->
-<button onclick="getTotalRevenue()">Get Total Revenue</button>
 
 <!-- Placeholder to display total revenue -->
 <div id="totalRevenueDisplay"></div>
@@ -48,7 +58,7 @@
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
         <!-- Container for displaying event list -->
-        <h3>All Events</h3>
+        <h3>All Tickets</h3>
         <div id="ticketList"></div>
     </div>
 </div>

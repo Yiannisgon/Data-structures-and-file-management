@@ -6,39 +6,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/keeperStyles.css">
-    <title>Customer signup</title>
+    <title>Customer Signup</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Sign Up</h1>
-        <form action="#" method="post" onsubmit="return false;">
-            
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" maxlength="100" required>
-    
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" maxlength="100" required>
-    
-            <label for="credit_card">Credit Card Details:</label>
-            <input type="text" id="credit_card" name="credit_card" maxlength="20" required>
+<div class="container">
+    <h1>Customer Sign Up</h1>
+    <form action="#" method="post" onsubmit="return false;">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" maxlength="100" required>
 
-            <label for="balance">Initial Balance (optional):</label>
-            <input type="number" id="balance" name="balance" step="0.01" min="0">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" maxlength="100" required>
 
-            <!--            <label for="Test">Check Button</label>-->
-<!--            <button type="button" onclick="loadDoc()">Check location </button>-->
-<!--            <div id="demo"></div>-->
-<!--            -->
-            <br>
+        <label for="credit_card">Credit Card Details:</label>
+        <input type="text" id="credit_card" name="credit_card" maxlength="20" required>
 
+        <label for="balance">Initial Balance (mandatory deposit):</label>
+        <input type="number" id="balance" name="balance" step="0.01" min="0">
 
-            <input type="button" id="signup-button" value="Sign Up" onclick="submitForm()">
-            <button type="button" onclick="window.location.href='new-reservation.html';">Make Reservation</button>
+        <input type="button" id="signup-button" value="Sign Up" onclick="submitForm()">
+    </form>
 
-
-
-        </form>
+    <!-- New Section for Reservations -->
+    <div class="reservation-section">
+        <p>Already registered? Continue to reservations.</p>
+        <button type="button" onclick="window.location.href='new-reservation.html';">Reservations</button>
     </div>
-    <script src="js/register.js"></script>
+</div>
+<script src="js/register.js"></script>
 </body>
 </html>

@@ -60,3 +60,14 @@ button:hover {
   max-height: 50vh; /* Set a maximum height for the user list divs */
   overflow-y: auto; /* Enable vertical scrolling if content overflows vertically */
 }
+
+#totalRevenueDisplay {
+  display: none; /* Hidden by default */
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  text-align: left;
+  font-size: 16px;
+}

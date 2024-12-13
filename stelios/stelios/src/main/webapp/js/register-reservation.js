@@ -156,3 +156,78 @@ function populateEventDropdown() {
 
 // Initialize event dropdown on page load
 document.addEventListener("DOMContentLoaded", populateEventDropdown);
+
+
+//new new
+// Fetch and display reservations based on the customer email
+function getReservationsByEmail() {
+    const customerEmail = document.getElementById("cancelReservationEmail").value.trim();
+
+    if (!customerEmail) {
+        alert("Please enter a valid email.");
+        return;
+    }
+
+    fetch(`GetReservationsByEmail?email=${encodeURIComponent(customerEmail)}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to fetch reservations: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(reservations => {
+            if (reservations.length === 0) {
+                document.getElementById("reservationListContainer").innerHTML = "No reservations found for this email.";
+            } else {
+                let reservationListContent = '';
+                reservations.forEach(reservation => {
+                    reservationListContent += createReservationTable(reservation);
+                });
+                document.getElementById("reservationListContainer").innerHTML = reservationListContent;
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching reservations:", error);
+            document.getElementById("reservationListContainer").innerHTML = "Error loading reservations.";
+        });
+}
+
+// Create the table to display reservations
+function createReservationTable(reservation) {
+    let html = '<table>';
+    html += `<tr><th colspan="2">Reservation ID: ${reservation.reservationId}</th></tr>`;
+
+    ['customerId', 'eventId', 'ticketCount', 'paymentAmount', 'reservationDate', 'ticketType'].forEach(function (key) {
+        if (reservation[key]) {
+            html += `<tr><td>${key.replace(/([A-Z])/g, ' $1').trim()}</td><td>${reservation[key]}</td></tr>`;
+        }
+    });
+
+    html += `<tr><td colspan="2"><button onclick="cancelReservation(${reservation.reservationId})">Cancel Reservation</button></td></tr>`;
+    html += '</table><br>';
+    return html;
+}
+
+// Handle the cancellation of a reservation
+function cancelReservation(reservationId) {
+    if (!reservationId || isNaN(reservationId)) {
+        alert("Invalid Reservation ID!");
+        return;
+    }
+
+    fetch(`DeleteReservation?reservation_id=${reservationId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to cancel reservation: ${response.status}`);
+            }
+            return response.text();
+        })
+        .then(message => {
+            alert(message);
+            getReservationsByEmail(); // Refresh the list after cancellation
+        })
+        .catch(error => {
+            console.error("Error canceling reservation:", error);
+            alert("An error occurred while canceling the reservation.");
+        });
+}
