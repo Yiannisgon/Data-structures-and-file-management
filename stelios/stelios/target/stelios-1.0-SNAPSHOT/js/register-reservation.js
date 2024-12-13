@@ -1,161 +1,158 @@
-function submitReservationAndCreate() {
-    // Collect form data
-    var formData = {
-        "ticketCount": parseInt(document.getElementById("ticketCount").value),
-        "reservationDate": formatDateTime(document.getElementById("reservationDate").value),
-        "paymentAmount": parseFloat(document.getElementById("paymentAmount").value),
-        "customerEmail": document.getElementById("customerEmail").value.trim(),
-        "eventID": parseInt(document.getElementById("eventID").value),
-        "ticketType": document.getElementById("ticketType").value // Ensure ticketType is included
-    };
-
-    // Validate form data
-    if (!formData.ticketType) {
-        alert("Please select a ticket type!");
+function onEventChange() {
+    const eventID = document.getElementById("eventID").value;
+    if (!eventID) {
+        document.getElementById("selectedEventDateTime").innerText = "Please select an event.";
         return;
     }
 
-    console.log("Sending JSON:", JSON.stringify(formData));
-
-    // Fetch customer ID and call createReservation as before
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', `GetCustomerByEmail?email=${encodeURIComponent(formData.customerEmail)}`, true);
-    xhr.onload = function () {
-        if (xhr.status === 200) {
-            var response = JSON.parse(xhr.responseText);
-            formData.customerID = response.customer_id; // Add customerID to formData
-            createReservation(formData);
-        } else {
-            alert("Error fetching customer data: " + xhr.responseText);
-        }
-    };
-
-    xhr.onerror = function () {
-        alert("An error occurred while fetching customer data.");
-    };
-
-    xhr.send();
+    fetch(`GetEventDetails?event_id=${eventID}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to fetch event details: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(event => {
+            if (event.date && event.time) {
+                // Combine date and time for display
+                document.getElementById("selectedEventDateTime").innerText = `${event.date} ${event.time}`;
+            } else {
+                document.getElementById("selectedEventDateTime").innerText = "Event details unavailable.";
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching event details:", error);
+            document.getElementById("selectedEventDateTime").innerText = "Error loading event details.";
+        });
 }
 
-function createReservation(formData) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'CreateReservation', true);
-    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+function onTicketTypeChange() {
+    const eventID = document.getElementById("eventID").value;
+    const ticketType = document.getElementById("ticketType").value;
 
-    xhr.onload = function () {
-        if (xhr.status === 200) {
-            alert("Reservation successfully created.");
-        } else {
-            alert("Error creating reservation: " + xhr.responseText);
-        }
-    };
-
-    xhr.onerror = function () {
-        alert("An error occurred while creating the reservation.");
-    };
-
-    xhr.send(JSON.stringify(formData));
-}
-
-// Function to format date and time to 'YYYY-MM-DD HH:mm:ss'
-function formatDateTime(dateTime) {
-    if (!dateTime) return null;
-    const [date, time] = dateTime.split("T");
-    return `${date} ${time}:00`;
-}
-
-function closeModal() {
-    // Close the modal
-    const modal = document.getElementById('userListModal');
-    modal.style.display = 'none';
-}
-
-function showAllEvents() {
-    getEvents();
-    toggleDisplay('eventListModal');
-}
-
-function toggleDisplay(elementId) {
-    var element = document.getElementById(elementId);
-    if (element.style.display === 'none' || element.style.display === '') {
-        element.style.display = 'block';
-    } else {
-        element.style.display = 'none';
+    if (!eventID || !ticketType) {
+        alert("Please select an event and ticket type.");
+        return;
     }
+
+    fetch(`GetTicketDetails?event_id=${eventID}&type=${encodeURIComponent(ticketType)}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to fetch ticket details: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(ticket => {
+            if (ticket.availability >= 0 && ticket.price) {
+                document.getElementById("ticketCount").max = ticket.availability; // Set max tickets
+                document.getElementById("ticketCount").value = ""; // Reset count
+                document.getElementById("totalPrice").innerText = "0.00"; // Reset price
+                document.getElementById("ticketCount").dataset.price = ticket.price; // Store ticket price
+            } else {
+                alert("No tickets available for the selected type.");
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching ticket details:", error);
+            alert("Failed to load ticket details. Please try again.");
+        });
 }
 
-function getEvents() {
-    var xhr = new XMLHttpRequest();
-    xhr.onload = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            // Parse the JSON response
-            var events = JSON.parse(xhr.responseText);
+function updatePrice() {
+    const ticketCount = parseInt(document.getElementById("ticketCount").value) || 0;
+    const pricePerTicket = parseFloat(document.getElementById("ticketCount").dataset.price) || 0;
 
-            // Create HTML content for each event using createTableEvent function
-            var eventListContent = '';
-            events.forEach(function (event) {
-                eventListContent += createTableEvent(event);
+    const totalPrice = ticketCount * pricePerTicket;
+    document.getElementById("totalPrice").innerText = totalPrice.toFixed(2);
+}
+
+function submitReservationAndCreate() {
+    const ticketCount = parseInt(document.getElementById("ticketCount").value);
+    const pricePerTicket = parseFloat(document.getElementById("ticketCount").dataset.price);
+    const totalPrice = ticketCount * pricePerTicket;
+
+    const formData = {
+        customerID: null, // Placeholder, to be updated after fetching customer details
+        eventID: parseInt(document.getElementById("eventID").value),
+        ticketCount: ticketCount,
+        paymentAmount: totalPrice, // Ensure numeric value
+        reservationDate: new Date().toISOString(), // Ensure proper ISO format
+        ticketType: document.getElementById("ticketType").value,
+    };
+
+    if (!formData.ticketCount || formData.ticketCount <= 0) {
+        alert("Please enter a valid ticket count.");
+        return;
+    }
+
+    if (!formData.eventID || !formData.ticketType) {
+        alert("Please select a valid event and ticket type.");
+        return;
+    }
+
+    const customerEmail = document.getElementById("customerEmail").value.trim();
+    if (!customerEmail) {
+        alert("Customer email is required.");
+        return;
+    }
+
+    fetch(`GetCustomerByEmail?email=${encodeURIComponent(customerEmail)}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to fetch customer details: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(customer => {
+            if (customer.balance < totalPrice) {
+                document.getElementById("balanceError").innerText = "Insufficient balance.";
+                return;
+            }
+
+            formData.customerID = customer.customer_id; // Assign customer ID
+
+            // Send reservation JSON to backend
+            return fetch("CreateReservation", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
             });
-
-            // Update the #eventList div with the event data
-            document.getElementById("eventList").innerHTML = eventListContent;
-        } else if (xhr.status !== 200) {
-            // Handle errors here, such as displaying a message to the user
-            document.getElementById("eventList").innerHTML = "Could not retrieve events data.";
-        }
-    };
-
-    xhr.open('GET', 'GetEvents');
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.send();
+        })
+        .then(response => {
+            if (response && response.ok) {
+                alert("Reservation successfully created.");
+            } else if (response) {
+                response.text().then(text => alert("Error creating reservation: " + text));
+            }
+        })
+        .catch(error => {
+            console.error("Error during reservation process:", error);
+            alert("An error occurred during the reservation process.");
+        });
 }
-
-function createTableEvent(event) {
-    var html = '<table>';
-    html += '<tr><th colspan="2">' + event.name + '</th></tr>';
-
-    // Add event_id if present
-    if (event.hasOwnProperty('event_id') && event.event_id !== null) {
-        html += '<tr><td>Event ID</td><td>' + event.event_id + '</td></tr>';
-    }
-
-    // Include keys and their values dynamically
-    var includeKeys = ['name', 'capacity', 'date', 'time', 'type'];
-    includeKeys.forEach(function(key) {
-        if (event.hasOwnProperty(key) && event[key] !== null) {
-            var value = event[key];
-            html += '<tr><td>' + key.charAt(0).toUpperCase() + key.slice(1) + '</td><td>' + value + '</td></tr>';
-        }
-    });
-
-    html += '</table>';
-    return html;
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-    populateEventDropdown();
-});
 
 function populateEventDropdown() {
-    var xhr = new XMLHttpRequest();
-    xhr.onload = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            var events = JSON.parse(xhr.responseText);
-
-            // Populate the dropdown
-            var eventDropdown = document.getElementById("eventID");
-            events.forEach(function (event) {
-                var option = document.createElement("option");
-                option.value = event.event_id;
-                option.textContent = event.name + " (" + event.date + ")";
-                eventDropdown.appendChild(option);
+    fetch('GetEvents')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to fetch events: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(events => {
+            const eventDropdown = document.getElementById('eventID');
+            eventDropdown.innerHTML = '<option value="" disabled selected>Select an event</option>';
+            events.forEach(event => {
+                if (event.event_id && event.name && event.date && event.time) {
+                    const option = document.createElement('option');
+                    option.value = event.event_id;
+                    option.textContent = `${event.name} (${event.date} at ${event.time})`;
+                    eventDropdown.appendChild(option);
+                }
             });
-        } else if (xhr.status !== 200) {
-            console.error("Error retrieving events:", xhr.responseText);
-        }
-    };
-
-    xhr.open('GET', 'GetEvents');
-    xhr.setRequestHeader('Content-type', 'application/json');
-    xhr.send();
+        })
+        .catch(error => console.error('Error fetching events:', error));
 }
+
+// Initialize event dropdown on page load
+document.addEventListener("DOMContentLoaded", populateEventDropdown);

@@ -205,4 +205,25 @@ public class EditTicketsTable {
         }
     }
 
+    public Ticket getTicketByEventAndType(int eventId, String ticketType) throws SQLException, ClassNotFoundException {
+        try (Connection con = DB_Connection.getConnection();
+             PreparedStatement pstmt = con.prepareStatement("SELECT * FROM tickets WHERE event_id = ? AND type = ?")) {
+            pstmt.setInt(1, eventId);
+            pstmt.setString(2, ticketType);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    String json = DB_Connection.getResultsToJSON(rs);
+                    Gson gson = new Gson();
+                    return gson.fromJson(json, Ticket.class);
+                }
+            }
+        } catch (SQLException ex) {
+            System.err.println("Error fetching ticket: " + ex.getMessage());
+            throw ex;
+        }
+        return null;
+    }
+
+
 }

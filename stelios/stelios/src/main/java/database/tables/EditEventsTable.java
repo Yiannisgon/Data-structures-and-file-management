@@ -214,4 +214,32 @@ public class EditEventsTable {
         }
     }
 
+    public Event getEventById(int eventId) throws SQLException, ClassNotFoundException {
+        Event event = null;
+        String query = "SELECT name, capacity, date, time, type, event_id FROM events WHERE event_id = ?";
+
+        try (Connection con = DB_Connection.getConnection();
+             PreparedStatement pstmt = con.prepareStatement(query)) {
+            pstmt.setInt(1, eventId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    event = new Event();
+                    event.setName(rs.getString("name"));
+                    event.setCapacity(rs.getInt("capacity"));
+                    event.setDate(rs.getDate("date"));
+                    event.setTime(rs.getTime("time"));
+                    event.setType(rs.getString("type"));
+                    event.setEventId(rs.getInt("event_id"));
+
+                    // Log combined date and time
+                    String combinedDateTime = rs.getDate("date") + " " + rs.getTime("time");
+                    System.out.println("Combined DateTime: " + combinedDateTime);
+                }
+            }
+        }
+        return event;
+    }
+
+
 }

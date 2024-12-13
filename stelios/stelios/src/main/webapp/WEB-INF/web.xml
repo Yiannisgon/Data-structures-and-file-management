@@ -81,6 +81,25 @@
         <servlet-name>GetReservations</servlet-name>
         <servlet-class>servlets.GetReservations</servlet-class>
     </servlet>
+
+    <servlet>
+        <servlet-name>GetEventDetails</servlet-name>
+        <servlet-class>servlets.GetEventDetails</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GetEventDetails</servlet-name>
+        <url-pattern>/GetEventDetails</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GetTicketDetails</servlet-name>
+        <servlet-class>servlets.GetTicketDetails</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GetTicketDetails</servlet-name>
+        <url-pattern>/GetTicketDetails</url-pattern>
+    </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>DeleteReservation</servlet-name>
         <url-pattern>/DeleteReservation</url-pattern>

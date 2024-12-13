@@ -1,6 +1,7 @@
 package servlets;
 
 import database.tables.EditEventsTable;
+import jakarta.servlet.annotation.WebServlet;
 import mainClasses.Event;
 import com.google.gson.Gson;
 
@@ -18,8 +19,8 @@ import java.util.logging.Logger;
 /**
  * Servlet to get all events.
  */
+@WebServlet(name = "GetEvents", urlPatterns = {"/GetEvents"})
 public class GetEvents extends HttpServlet {
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -35,12 +36,11 @@ public class GetEvents extends HttpServlet {
             String json = new Gson().toJson(events);
             out.println(json);
 
-            response.setStatus(200);
+            response.setStatus(HttpServletResponse.SC_OK);
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(GetEvents.class.getName()).log(Level.SEVERE, null, ex);
-            response.setStatus(500); // Set error status code
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("Error fetching events: " + ex.getMessage());
         }
     }
-
-    // Other methods and class closing...
 }

@@ -4,54 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/keeperStyles.css">
-
     <title>New Reservation</title>
 </head>
 <body>
 <form action="#" method="post" onsubmit="return false;">
     <div class="container">
         <h2>Make a New Reservation</h2>
+
+        <label for="eventID">Event:</label>
+        <select id="eventID" name="eventID" onchange="onEventChange()" required>
+            <option value="" disabled selected>Select an event</option>
+        </select>
+
+        <div id="eventDateTime">
+            <p><strong>Date and Time:</strong> <span id="selectedEventDateTime"></span></p>
+        </div>
+
+        <label for="ticketType">Ticket Type:</label>
+        <select id="ticketType" name="ticketType" onchange="onTicketTypeChange()" required>
+            <option value="" disabled selected>Select a ticket type</option>
+            <option value="VIP">VIP</option>
+            <option value="GeneralAdmission">General Admission</option>
+        </select>
+
         <label for="ticketCount">Ticket Count:</label>
-        <input type="number" id="ticketCount" name="ticketCount" min="1" required>
+        <input type="number" id="ticketCount" name="ticketCount" min="1" oninput="updatePrice()" required>
 
-        <label for="reservationDate">Reservation Date:</label>
-        <input type="datetime-local" id="reservationDate" name="reservationDate" required>
-
-        <label for="paymentAmount">Payment Amount:</label>
-        <input type="number" id="paymentAmount" name="paymentAmount" step="0.01" required>
+        <p><strong>Total Price:</strong> $<span id="totalPrice">0.00</span></p>
+        <p id="balanceError" style="color: red;"></p>
 
         <label for="customerEmail">Customer Email:</label>
         <input type="email" id="customerEmail" name="customerEmail" required>
 
-        <label for="eventID">Event:</label>
-        <select id="eventID" name="eventID" required>
-            <option value="" disabled selected>Select an event</option>
-        </select>
-
-
-
-        <label for="ticketType">Ticket Type:</label>
-        <select id="ticketType" name="ticketType" required>
-            <option value="" disabled selected>Select a ticket type</option>
-            <option value="VIP">VIP</option>
-            <option value="General Admission">General Admission</option>
-        </select>
-
         <button type="submit" onclick="submitReservationAndCreate()">Submit Reservation</button>
     </div>
-
 </form>
+
 <button onclick="showAllEvents()">Show All Events</button>
 <div id="eventListModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
-        <!-- Container for displaying event list -->
         <h3>All Events</h3>
         <div id="eventList"></div>
     </div>
 </div>
 <script src="js/register-reservation.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 </body>
 </html>

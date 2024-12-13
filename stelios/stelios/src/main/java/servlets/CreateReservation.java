@@ -16,8 +16,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Timestamp;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @WebServlet(name = "CreateReservation", urlPatterns = {"/CreateReservation"})
 public class CreateReservation extends HttpServlet {
@@ -29,13 +27,14 @@ public class CreateReservation extends HttpServlet {
 
         StringBuilder sb = new StringBuilder();
         String line;
-        try {
-            BufferedReader reader = request.getReader();
+
+        // Read and log the input JSON
+        try (BufferedReader reader = request.getReader()) {
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
             }
         } catch (IOException e) {
-            response.setStatus(400); // Bad request
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write("Error reading input: " + e.getMessage());
             return;
         }
@@ -48,7 +47,8 @@ public class CreateReservation extends HttpServlet {
             Gson gson = new GsonBuilder()
                     .registerTypeAdapter(Timestamp.class, (JsonDeserializer<Timestamp>) (json, typeOfT, context) -> {
                         try {
-                            return Timestamp.valueOf(json.getAsString());
+                            // Convert ISO 8601 format to Timestamp
+                            return Timestamp.valueOf(json.getAsString().replace("T", " ").replace("Z", ""));
                         } catch (IllegalArgumentException e) {
                             throw new RuntimeException("Invalid timestamp format. Expected 'YYYY-MM-DD HH:mm:ss'.");
                         }
@@ -58,17 +58,20 @@ public class CreateReservation extends HttpServlet {
             // Parse JSON to Reservation object
             Reservation newReservation = gson.fromJson(requestData, Reservation.class);
 
-            // Validate fields
+            // Validate mandatory fields
             if (newReservation.getCustomerId() <= 0 ||
                     newReservation.getEventId() <= 0 ||
                     newReservation.getTicketCount() <= 0 ||
                     newReservation.getPaymentAmount() <= 0 ||
                     newReservation.getReservationDate() == null ||
-                    newReservation.getTicketType() == null || newReservation.getTicketType().isEmpty()) { // Added ticketType validation
-                response.setStatus(400); // Bad request
+                    newReservation.getTicketType() == null || newReservation.getTicketType().isEmpty()) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 out.write("Missing or invalid required fields.");
                 return;
             }
+
+            // Log the parsed reservation details
+            System.out.println("Parsed Reservation: " + gson.toJson(newReservation));
 
             EditCustomersTable ect = new EditCustomersTable();
             EditReservationsTable ert = new EditReservationsTable();
@@ -76,27 +79,25 @@ public class CreateReservation extends HttpServlet {
             try {
                 // Fetch the customer's current balance
                 float customerBalance = ect.getCustomerBalance(newReservation.getCustomerId());
+                System.out.println("Customer Balance: " + customerBalance);
 
                 // Validate sufficient balance
                 if (customerBalance < newReservation.getPaymentAmount()) {
-                    response.setStatus(400); // Bad request
+                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     out.write("Insufficient balance for the reservation.");
                     return;
                 }
 
-                // Extract ticketType and pass it to addReservation
-                String ticketType = newReservation.getTicketType();
-
                 // Proceed with reservation creation and balance deduction
-                ert.addReservation(newReservation, ticketType);  // Pass ticketType as the second argument
+                ert.addReservation(newReservation, newReservation.getTicketType()); // Pass ticketType directly
 
-                // Success response
-                response.setStatus(200);
+                // Respond with success
+                response.setStatus(HttpServletResponse.SC_OK);
                 out.println(gson.toJson(newReservation));
                 System.out.println("Reservation successfully created.");
             } catch (Exception ex) {
                 System.err.println("Error during reservation creation: " + ex.getMessage());
-                response.setStatus(500); // Internal Server Error
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 out.write("Error during reservation creation: " + ex.getMessage());
             }
         }
