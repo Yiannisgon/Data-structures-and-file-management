@@ -169,6 +169,7 @@ public class EditEventsTable {
             Logger.getLogger(EditEventsTable.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     public void deleteEventById(String eventId) throws ClassNotFoundException {
         String deleteQuery = "DELETE FROM events WHERE event_id = ?";
 
