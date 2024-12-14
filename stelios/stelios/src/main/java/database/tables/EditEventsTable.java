@@ -308,5 +308,32 @@ public class EditEventsTable {
     }
 
 
+    public JsonObject getMostProfitableEventInTimeRange(String startDate, String endDate) throws SQLException, ClassNotFoundException {
+        String query = "SELECT e.name AS event_name, SUM(r.payment_amount) AS total_revenue " +
+                "FROM events e " +
+                "JOIN reservations r ON e.event_id = r.event_id " +
+                "WHERE r.reservation_date BETWEEN ? AND ? " +
+                "GROUP BY e.event_id, e.name " +
+                "ORDER BY total_revenue DESC " +
+                "LIMIT 1";
+
+        try (Connection con = DB_Connection.getConnection();
+             PreparedStatement pstmt = con.prepareStatement(query)) {
+
+            pstmt.setString(1, startDate);
+            pstmt.setString(2, endDate);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    JsonObject result = new JsonObject();
+                    result.addProperty("eventName", rs.getString("event_name"));
+                    result.addProperty("revenue", rs.getFloat("total_revenue"));
+                    return result;
+                }
+            }
+        }
+
+        return null; // Return null if no data found
+    }
 
 }

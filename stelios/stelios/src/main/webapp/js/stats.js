@@ -132,6 +132,37 @@ function fetchMostTicketsReservedEvent() {
         });
 }
 
+function fetchMostProfitableEvent() {
+    const startDate = document.getElementById("start-date").value;
+    const endDate = document.getElementById("end-date").value;
+
+    if (!startDate || !endDate) {
+        alert("Please select both start and end dates.");
+        return;
+    }
+
+    fetch(`GetMostProfitableEvent?start_date=${startDate}&end_date=${endDate}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to fetch most profitable event: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const container = document.getElementById("most-profitable-event");
+            if (data.eventName && data.revenue) {
+                container.innerHTML = `<p>Event Name: ${data.eventName}</p><p>Total Revenue: $${data.revenue.toFixed(2)}</p>`;
+            } else {
+                container.innerHTML = "No data available for the selected time range.";
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching most profitable event:", error);
+            const container = document.getElementById("most-profitable-event");
+            container.innerHTML = "Error loading data.";
+        });
+}
+
 // Initialize both dropdowns on page load
 document.addEventListener("DOMContentLoaded", () => {
     populateEventDropdown();

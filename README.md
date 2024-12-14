@@ -10,4 +10,4 @@ also
 forgot automated ticket making when making event
 
 V11
-3 VIEWS DONE
+4/7 VIEWS DONE

@@ -96,6 +96,15 @@
         <url-pattern>/GetMostTicketsReservedEvent</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>GetMostProfitableEvent</servlet-name>
+        <servlet-class>servlets.GetMostProfitableEvent</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GetMostProfitableEvent</servlet-name>
+        <url-pattern>/GetMostProfitableEvent</url-pattern>
+    </servlet-mapping>
+
 
     <servlet-mapping>
         <servlet-name>DeleteReservation</servlet-name>
