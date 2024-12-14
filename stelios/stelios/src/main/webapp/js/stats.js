@@ -206,8 +206,64 @@ function fetchReservationsByTimePeriod() {
         });
 }
 
-// Initialize both dropdowns on page load
+function populateEventNameDropdown() {
+    fetch('GetEvents')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to fetch events: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(events => {
+            const eventDropdown = document.getElementById('event-name');
+            eventDropdown.innerHTML = '<option value="" disabled selected>Select an event</option>';
+            events.forEach(event => {
+                if (event.name) {
+                    const option = document.createElement('option');
+                    option.value = event.name;
+                    option.textContent = event.name;
+                    eventDropdown.appendChild(option);
+                }
+            });
+        })
+        .catch(error => console.error('Error fetching events:', error));
+}
+
+
+function fetchEventRevenueByTicketType() {
+    const eventName = document.getElementById("event-name").value;
+    const ticketType = document.getElementById("ticket-type-event").value;
+
+    if (!eventName || !ticketType) {
+        alert("Please select both an event and a ticket type.");
+        return;
+    }
+
+    fetch(`GetEventRevenueByTicketType?event_name=${encodeURIComponent(eventName)}&ticket_type=${ticketType}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to fetch event revenue: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const container = document.getElementById("event-revenue-by-ticket-type");
+            if (data.revenue !== undefined) {
+                container.innerHTML = `<p>Total Revenue for ${ticketType} Tickets in "${eventName}": $${data.revenue.toFixed(2)}</p>`;
+            } else {
+                container.innerHTML = "Revenue data unavailable.";
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching event revenue:", error);
+            const container = document.getElementById("event-revenue-by-ticket-type");
+            container.innerHTML = "Error loading data.";
+        });
+}
+
+// Populate dropdowns on page load
 document.addEventListener("DOMContentLoaded", () => {
+    populateEventNameDropdown();
     populateEventDropdown();
     populateRevenueEventDropdown();
 });

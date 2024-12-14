@@ -58,16 +58,19 @@
 
     <section>
         <h2>Event Revenue for VIP or General Tickets</h2>
-        <label for="event-id">Event ID:</label>
-        <input type="text" id="event-id" placeholder="Enter Event ID">
+        <label for="event-name">Event Name:</label>
+        <select id="event-name">
+            <option value="" disabled selected>Select an event</option>
+        </select>
         <label for="ticket-type-event">Ticket Type:</label>
         <select id="ticket-type-event">
-            <option value="vip">VIP</option>
-            <option value="general">General</option>
+            <option value="VIP">VIP</option>
+            <option value="GeneralAdmission">General Admission</option>
         </select>
         <button onclick="fetchEventRevenueByTicketType()">View</button>
         <div id="event-revenue-by-ticket-type"></div>
     </section>
+
 </main>
 <script src="js/stats.js"></script>
 </body>

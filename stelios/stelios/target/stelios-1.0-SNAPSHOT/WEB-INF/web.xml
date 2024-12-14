@@ -88,6 +88,17 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>GetEventRevenueByTicketType</servlet-name>
+        <servlet-class>servlets.GetEventRevenueByTicketType</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GetEventRevenueByTicketType</servlet-name>
+        <url-pattern>/GetEventRevenueByTicketType</url-pattern>
+    </servlet-mapping>
+
+
+
+    <servlet>
         <servlet-name>GetMostTicketsReservedEvent</servlet-name>
         <servlet-class>servlets.GetMostTicketsReservedEvent</servlet-class>
     </servlet>

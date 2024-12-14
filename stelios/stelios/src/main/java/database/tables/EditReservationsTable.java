@@ -398,4 +398,28 @@ public class EditReservationsTable {
         return reservations;
     }
 
+
+    public float getRevenueByEventNameAndTicketType(String eventName, String ticketType) throws SQLException, ClassNotFoundException {
+        String query = "SELECT COALESCE(SUM(r.payment_amount), 0) AS total_revenue " +
+                "FROM reservations r " +
+                "JOIN events e ON r.event_id = e.event_id " +
+                "WHERE e.name = ? AND r.ticket_type = ?";
+
+        try (Connection con = DB_Connection.getConnection();
+             PreparedStatement pstmt = con.prepareStatement(query)) {
+
+            pstmt.setString(1, eventName);
+            pstmt.setString(2, ticketType);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getFloat("total_revenue");
+                }
+            }
+        }
+
+        return 0; // Default to 0 if no revenue found
+    }
+
+    
 }

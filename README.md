@@ -9,3 +9,5 @@ automated ticket making when making event FIXED (total ticket == availabiity not
 TO DO : VIEWS/REPORT + ONE LAST CHECK
 
 fixed minor mac problems
+
+TO DO WHEN CANCEL RESERVATION ADD BACK TICKETS TO AVAILABILITY
