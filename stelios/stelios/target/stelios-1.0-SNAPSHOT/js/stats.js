@@ -205,35 +205,6 @@ function fetchReservationsByTimePeriod() {
             container.innerHTML = "Error loading data.";
         });
 }
-function fetchTotalRevenueByTicketType() {
-    const ticketType = document.getElementById("ticket-type").value;
-
-    if (!ticketType) {
-        alert("Please select a ticket type.");
-        return;
-    }
-
-    fetch(`GetTotalRevenueByTicketType?ticket_type=${ticketType}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Failed to fetch total revenue: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            const container = document.getElementById("total-revenue-by-ticket-type");
-            if (data.revenue !== undefined) {
-                container.innerHTML = `<p>Total Revenue for ${ticketType}: $${data.revenue.toFixed(2)}</p>`;
-            } else {
-                container.innerHTML = "Revenue data unavailable.";
-            }
-        })
-        .catch(error => {
-            console.error("Error fetching total revenue:", error);
-            const container = document.getElementById("total-revenue-by-ticket-type");
-            container.innerHTML = "Error loading data.";
-        });
-}
 
 // Initialize both dropdowns on page load
 document.addEventListener("DOMContentLoaded", () => {

@@ -114,14 +114,6 @@
         <url-pattern>/GetReservationsByTimePeriod</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>GetTotalRevenueByTicketType</servlet-name>
-        <servlet-class>servlets.GetTotalRevenueByTicketType</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>GetTotalRevenueByTicketType</servlet-name>
-        <url-pattern>/GetTotalRevenueByTicketType</url-pattern>
-    </servlet-mapping>
 
 
     <servlet-mapping>
