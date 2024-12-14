@@ -6,6 +6,8 @@ REMOVED UNUSED FILES (FROM PETS ETC)
 
 TO DO: 
 VIEWS AND REPORT
+also
+forgot automated ticket making when making event
 
 V11
-2 VIEWS DONE
+3 VIEWS DONE

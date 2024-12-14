@@ -108,6 +108,30 @@ function fetchAvailableAndReservedSeats() {
         });
 }
 
+
+function fetchMostTicketsReservedEvent() {
+    fetch('GetMostTicketsReservedEvent')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to fetch most tickets reserved event: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const container = document.getElementById('most-tickets-reserved-event');
+            if (data.eventName && data.ticketCount) {
+                container.innerHTML = `<p>Event Name: ${data.eventName}</p><p>Tickets Reserved: ${data.ticketCount}</p>`;
+            } else {
+                container.innerHTML = "No data available.";
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching most tickets reserved event:', error);
+            const container = document.getElementById('most-tickets-reserved-event');
+            container.innerHTML = "Error loading data.";
+        });
+}
+
 // Initialize both dropdowns on page load
 document.addEventListener("DOMContentLoaded", () => {
     populateEventDropdown();

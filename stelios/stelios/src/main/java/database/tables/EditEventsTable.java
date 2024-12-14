@@ -242,8 +242,12 @@ public class EditEventsTable {
     }
 
     public int[] getAvailableAndReservedSeats(int eventId) throws SQLException, ClassNotFoundException {
-        String query = "SELECT capacity - COUNT(r.reservation_id) AS available_seats, COUNT(r.reservation_id) AS reserved_seats " +
-                "FROM events e LEFT JOIN reservations r ON e.event_id = r.event_id WHERE e.event_id = ? GROUP BY e.capacity";
+        String query = "SELECT e.capacity - COALESCE(SUM(r.ticket_count), 0) AS available_seats, " +
+                "COALESCE(SUM(r.ticket_count), 0) AS reserved_seats " +
+                "FROM events e " +
+                "LEFT JOIN reservations r ON e.event_id = r.event_id " +
+                "WHERE e.event_id = ? " +
+                "GROUP BY e.capacity";
 
         try (Connection con = DB_Connection.getConnection();
              PreparedStatement pstmt = con.prepareStatement(query)) {
@@ -254,13 +258,10 @@ public class EditEventsTable {
                 if (rs.next()) {
                     int availableSeats = rs.getInt("available_seats");
                     int reservedSeats = rs.getInt("reserved_seats");
-
-                    // Return available and reserved seats as an array
                     return new int[]{availableSeats, reservedSeats};
                 }
             }
         }
-
         return null; // If no event or reservations found
     }
 
@@ -281,6 +282,29 @@ public class EditEventsTable {
         }
 
         return -1; // Return -1 if no revenue data found
+    }
+
+    public JsonObject getMostTicketsReservedEvent() throws SQLException, ClassNotFoundException {
+        String query = "SELECT e.name AS event_name, SUM(r.ticket_count) AS ticket_count " +
+                "FROM events e " +
+                "JOIN reservations r ON e.event_id = r.event_id " +
+                "GROUP BY e.event_id, e.name " +
+                "ORDER BY ticket_count DESC " +
+                "LIMIT 1";
+
+        try (Connection con = DB_Connection.getConnection();
+             PreparedStatement pstmt = con.prepareStatement(query)) {
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    JsonObject result = new JsonObject();
+                    result.addProperty("eventName", rs.getString("event_name"));
+                    result.addProperty("ticketCount", rs.getInt("ticket_count"));
+                    return result;
+                }
+            }
+        }
+        return null; // If no data found
     }
 
 
