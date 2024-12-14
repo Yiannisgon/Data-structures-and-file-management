@@ -105,6 +105,16 @@
         <url-pattern>/GetMostProfitableEvent</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>GetReservationsByTimePeriod</servlet-name>
+        <servlet-class>servlets.GetReservationsByTimePeriod</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GetReservationsByTimePeriod</servlet-name>
+        <url-pattern>/GetReservationsByTimePeriod</url-pattern>
+    </servlet-mapping>
+
+
 
     <servlet-mapping>
         <servlet-name>DeleteReservation</servlet-name>

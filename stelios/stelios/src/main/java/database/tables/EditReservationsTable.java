@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -363,5 +364,38 @@ public class EditReservationsTable {
         return reservations;
     }
 
-    
+    public List<JsonObject> getReservationsWithDetailsByTimePeriod(String startDate, String endDate) throws SQLException, ClassNotFoundException {
+        String query = "SELECT r.reservation_id, e.name AS event_name, c.name AS customer_name, r.ticket_count, " +
+                "r.payment_amount, r.reservation_date " +
+                "FROM reservations r " +
+                "JOIN events e ON r.event_id = e.event_id " +
+                "JOIN customers c ON r.customer_id = c.customer_id " +
+                "WHERE r.reservation_date BETWEEN ? AND ? " +
+                "ORDER BY r.reservation_date ASC";
+
+        List<JsonObject> reservations = new ArrayList<>();
+
+        try (Connection con = DB_Connection.getConnection();
+             PreparedStatement pstmt = con.prepareStatement(query)) {
+
+            pstmt.setString(1, startDate);
+            pstmt.setString(2, endDate);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    JsonObject reservation = new JsonObject();
+                    reservation.addProperty("reservationId", rs.getInt("reservation_id"));
+                    reservation.addProperty("eventName", rs.getString("event_name"));
+                    reservation.addProperty("customerName", rs.getString("customer_name"));
+                    reservation.addProperty("ticketCount", rs.getInt("ticket_count"));
+                    reservation.addProperty("paymentAmount", rs.getFloat("payment_amount"));
+                    reservation.addProperty("reservationDate", rs.getTimestamp("reservation_date").toString());
+                    reservations.add(reservation);
+                }
+            }
+        }
+
+        return reservations;
+    }
+
 }

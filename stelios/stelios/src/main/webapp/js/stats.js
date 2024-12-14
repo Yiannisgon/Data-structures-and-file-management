@@ -163,6 +163,49 @@ function fetchMostProfitableEvent() {
         });
 }
 
+function fetchReservationsByTimePeriod() {
+    const startDate = document.getElementById("reservation-start-date").value;
+    const endDate = document.getElementById("reservation-end-date").value;
+
+    if (!startDate || !endDate) {
+        alert("Please select both start and end dates.");
+        return;
+    }
+
+    fetch(`GetReservationsByTimePeriod?start_date=${startDate}&end_date=${endDate}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to fetch reservations by time period: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const container = document.getElementById("reservations-by-time-period");
+            if (data.length > 0) {
+                let html = "<table><tr><th>Reservation ID</th><th>Event</th><th>Customer</th><th>Tickets</th><th>Payment</th><th>Date</th></tr>";
+                data.forEach(reservation => {
+                    html += `<tr>
+                                <td>${reservation.reservationId}</td>
+                                <td>${reservation.eventName}</td>
+                                <td>${reservation.customerName}</td>
+                                <td>${reservation.ticketCount}</td>
+                                <td>$${reservation.paymentAmount.toFixed(2)}</td>
+                                <td>${reservation.reservationDate}</td>
+                             </tr>`;
+                });
+                html += "</table>";
+                container.innerHTML = html;
+            } else {
+                container.innerHTML = "No reservations found for the selected time period.";
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching reservations by time period:", error);
+            const container = document.getElementById("reservations-by-time-period");
+            container.innerHTML = "Error loading data.";
+        });
+}
+
 // Initialize both dropdowns on page load
 document.addEventListener("DOMContentLoaded", () => {
     populateEventDropdown();
