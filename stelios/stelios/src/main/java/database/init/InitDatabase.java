@@ -21,6 +21,7 @@ import java.util.ArrayList;
  *
  * @author micha
  */
+
 public class InitDatabase {
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {

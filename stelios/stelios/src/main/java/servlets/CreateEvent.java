@@ -17,6 +17,7 @@ import mainClasses.Event;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
+
 @WebServlet(name = "CreateEvent", urlPatterns = {"/CreateEvent"})
 public class CreateEvent extends HttpServlet {
 

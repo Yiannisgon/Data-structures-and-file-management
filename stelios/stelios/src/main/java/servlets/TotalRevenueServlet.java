@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 /**
  * Servlet to get the total revenue for all ticket types.
  */
-@WebServlet("/TotalRevenueServlet")
+@WebServlet(name = "TotalRevenueServlet", urlPatterns = {"/TotalRevenueServlet"})
 public class TotalRevenueServlet extends HttpServlet {
 
     @Override

@@ -45,11 +45,9 @@ public class EditTicketsTable {
         Gson gson = new Gson();
         return gson.toJson(ticket, Ticket.class);
     }
-    public void createTicketsTable() throws SQLException, ClassNotFoundException {
-        Connection con = DB_Connection.getConnection();
-        Statement stmt = con.createStatement();
 
-        String query = "CREATE TABLE tickets ("
+    public void createTicketsTable() throws SQLException, ClassNotFoundException {
+        String query = "CREATE TABLE IF NOT EXISTS tickets ("
                 + "ticket_id INTEGER not NULL AUTO_INCREMENT, "
                 + "availability INTEGER not NULL, "
                 + "price FLOAT not NULL, "
@@ -58,31 +56,52 @@ public class EditTicketsTable {
                 + "PRIMARY KEY (ticket_id), "
                 + "FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE CASCADE ON UPDATE CASCADE)";
 
-        stmt.execute(query);
-        stmt.close();
+        try (Connection con = DB_Connection.getConnection();
+             Statement stmt = con.createStatement()) {
+
+            System.out.println("Creating Tickets Table...");
+            stmt.execute(query);
+            System.out.println("Tickets Table successfully created (or already exists).");
+
+        } catch (SQLException ex) {
+            System.err.println("Error creating Tickets Table: " + ex.getMessage());
+            ex.printStackTrace();
+            throw ex;
+        }
     }
 
     /**
      * Adds a new ticket to the database.
      */
     public void addTicket(Ticket ticket) throws ClassNotFoundException {
-        try {
-            Connection con = DB_Connection.getConnection();
-            Statement stmt = con.createStatement();
+        // Validate Ticket object
+        if (ticket == null || ticket.getAvailability() <= 0 || ticket.getPrice() <= 0 ||
+                ticket.getType() == null || ticket.getType().isEmpty() || ticket.getEvent_id() <= 0) {
+            throw new IllegalArgumentException("Invalid ticket data: " + ticket);
+        }
 
-            String insertQuery = "INSERT INTO tickets (availability, price, type, event_id) VALUES ("
-                    + ticket.getAvailability() + ", "
-                    + ticket.getPrice() + ", "
-                    + "'" + ticket.getType() + "', "
-                    + ticket.getEvent_id() // Assuming ticket has a getEventId() method
-                    + ")";
-            System.out.println(insertQuery);
-            stmt.executeUpdate(insertQuery);
+        String insertQuery = "INSERT INTO tickets (availability, price, type, event_id) VALUES (?, ?, ?, ?)";
+
+        try (Connection con = DB_Connection.getConnection();
+             PreparedStatement pstmt = con.prepareStatement(insertQuery)) {
+
+            // Set parameters for the prepared statement
+            pstmt.setInt(1, ticket.getAvailability());
+            pstmt.setFloat(2, ticket.getPrice());
+            pstmt.setString(3, ticket.getType());
+            pstmt.setInt(4, ticket.getEvent_id());
+
+            // Debug log for the query execution
+            System.out.println("Executing Query: " + pstmt);
+
+            // Execute the update
+            pstmt.executeUpdate();
             System.out.println("# The ticket was successfully added to the database.");
 
-            stmt.close();
         } catch (SQLException ex) {
-            Logger.getLogger(EditTicketsTable.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println("Error adding ticket to the database: " + ex.getMessage());
+            ex.printStackTrace();
+            throw new RuntimeException("Error adding ticket: " + ex.getMessage());
         }
     }
 
