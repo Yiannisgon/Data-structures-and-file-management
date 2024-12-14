@@ -41,11 +41,6 @@ public class EditTicketsTable {
         return ticket;
     }
 
-    public String ticketToJSON(Ticket ticket) {
-        Gson gson = new Gson();
-        return gson.toJson(ticket, Ticket.class);
-    }
-
     public void createTicketsTable() throws SQLException, ClassNotFoundException {
         String query = "CREATE TABLE IF NOT EXISTS tickets ("
                 + "ticket_id INTEGER not NULL AUTO_INCREMENT, "
@@ -106,81 +101,8 @@ public class EditTicketsTable {
     }
 
     /**
-     * Retrieves a ticket from the database by its ID.
-     */
-    public Ticket databaseToTicket(int ticketId) throws SQLException, ClassNotFoundException {
-        Connection con = DB_Connection.getConnection();
-        Statement stmt = con.createStatement();
-
-        try {
-            ResultSet rs = stmt.executeQuery("SELECT * FROM tickets WHERE ticket_id=" + ticketId);
-            if (rs.next()) {
-                String json = DB_Connection.getResultsToJSON(rs);
-                Gson gson = new Gson();
-                return gson.fromJson(json, Ticket.class);
-            }
-        } catch (Exception e) {
-            System.err.println("Got an exception! ");
-            System.err.println(e.getMessage());
-        } finally {
-            stmt.close();
-        }
-        return null;
-    }
-
-    /**
-     * Retrieves all tickets from the database.
-     */
-    public ArrayList<Ticket> getAllTickets() throws SQLException, ClassNotFoundException {
-        Connection con = DB_Connection.getConnection();
-        Statement stmt = con.createStatement();
-        ArrayList<Ticket> tickets = new ArrayList<>();
-
-        try {
-            ResultSet rs = stmt.executeQuery("SELECT * FROM tickets");
-            while (rs.next()) {
-                String json = DB_Connection.getResultsToJSON(rs);
-                Gson gson = new Gson();
-                tickets.add(gson.fromJson(json, Ticket.class));
-            }
-        } catch (Exception e) {
-            System.err.println("Got an exception! ");
-            System.err.println(e.getMessage());
-        } finally {
-            stmt.close();
-        }
-        return tickets;
-    }
-
-    /**
-     * Updates the availability of a ticket by its ID.
-     */
-    public void updateTicketAvailability(int ticketId, int availability) throws SQLException, ClassNotFoundException {
-        Connection con = DB_Connection.getConnection();
-        Statement stmt = con.createStatement();
-
-        String updateQuery = "UPDATE tickets SET availability=" + availability + " WHERE ticket_id=" + ticketId;
-        stmt.executeUpdate(updateQuery);
-        stmt.close();
-    }
-
-    /**
      * Deletes a ticket from the database by its ID.
      */
-    public void deleteTicket(int ticketId) throws ClassNotFoundException {
-        try {
-            Connection con = DB_Connection.getConnection();
-            Statement stmt = con.createStatement();
-
-            String deleteQuery = "DELETE FROM tickets WHERE ticket_id=" + ticketId;
-            stmt.executeUpdate(deleteQuery);
-            System.out.println("# The ticket was successfully deleted from the database.");
-
-            stmt.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(EditTicketsTable.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
 
     // Method to get total revenue for both ticket types
     public Map<String, Float> getTotalRevenueForAllTypes() throws SQLException, ClassNotFoundException {

@@ -5,10 +5,7 @@
  */
 package database.init;
 
-/**
- *
- * @author mountant
- */
+
 public class Resources {
 
     static String customer1 = "{\"name\":\"Victror VonDoom\",\"email\":\"victor.vondoom@mail.com\",\"credit_card_details\":\"4111111111111111\",\"balance\":50.0}";

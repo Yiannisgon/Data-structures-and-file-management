@@ -31,7 +31,7 @@ h1, h2 {
     margin-bottom: 10px;
 }
 
-/* Form Container */
+
 form {
     display: flex;
     flex-direction: column;
@@ -71,7 +71,7 @@ form button:hover {
     background-color: #45a049;
 }
 
-/* Ticket Section */
+
 h3 {
     margin-top: 20px;
     font-size: 18px;
@@ -84,7 +84,7 @@ form .ticket-section {
     gap: 15px;
 }
 
-/* Table Styles */
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -98,7 +98,7 @@ table th, table td {
     color: #333;
 }
 
-/* Button Styles */
+
 button {
     padding: 10px 15px;
     border: none;
@@ -113,7 +113,7 @@ button:hover {
     background-color: #025aa5;
 }
 
-/* Responsive Design */
+
 @media (max-width: 700px) {
     .container {
         width: 95%;
@@ -125,12 +125,10 @@ button:hover {
 }
 
 .welcome-message {
-    /* Inherit styles from body for font, color, etc. */
+
     font-family: inherit;
     color: inherit;
     line-height: inherit;
-
-    /* Any additional specific styles for welcome message */
-    font-size: 1.2em; /* Example: Increase font size */
-    margin-bottom: 15px; /* Example: Add some margin */
+    font-size: 1.2em;
+    margin-bottom: 15px;
 }

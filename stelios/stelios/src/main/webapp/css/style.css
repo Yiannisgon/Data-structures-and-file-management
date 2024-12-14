@@ -94,46 +94,8 @@ input[type="submit"]:hover {
     }
 }
 
-/* Pet Keeper Fields */
-#pet-keeper-fields {
-    background-color: #fff;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-top: 10px;
-}
 
-#pet-keeper-fields label {
-    color: #333;
-    margin-bottom: 5px;
-    display: block;
-}
 
-#pet-keeper-fields input[type="radio"],
-#pet-keeper-fields input[type="checkbox"] {
-    margin-right: 5px;
-}
-
-#pet-keeper-fields input[type="number"] {
-    width: 100px;
-    padding: 10px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    color: #333;
-}
-
-#pet-keeper-fields textarea {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    color: #333;
-}
-
-/* Map Section */
 #Map {
     height: 600px;
     width: 100%;

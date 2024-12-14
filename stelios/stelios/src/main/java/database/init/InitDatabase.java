@@ -17,11 +17,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 
-/*
- *
- * @author micha
- */
-
 public class InitDatabase {
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
@@ -30,9 +25,6 @@ public class InitDatabase {
         init.initTables();
         init.addToDatabaseExamples();
 
-
-        //  init.dropDatabase();
-        // init.deleteRecords();
     }
 
     public void dropDatabase() throws SQLException, ClassNotFoundException {
@@ -72,7 +64,7 @@ public class InitDatabase {
 
         EditCustomersTable editCustomers = new EditCustomersTable();
 
-// Add 15 customers
+        // Add 15 customers
         editCustomers.addCustomerFromJSON(Resources.customer1);
         editCustomers.addCustomerFromJSON(Resources.customer2);
         editCustomers.addCustomerFromJSON(Resources.customer3);
@@ -91,7 +83,7 @@ public class InitDatabase {
 
         EditEventsTable editEvents = new EditEventsTable();
 
-// Add 5 events
+        // Add 5 events
         editEvents.addEventFromJSON(Resources.event1);
         editEvents.addEventFromJSON(Resources.event2);
         editEvents.addEventFromJSON(Resources.event3);
@@ -100,7 +92,7 @@ public class InitDatabase {
 
         EditTicketsTable editTickets = new EditTicketsTable();
 
-// Add 10 tickets (2 for each event)
+        // Add 10 tickets (2 for each event)
         editTickets.addTicketFromJSON(Resources.ticket1);
         editTickets.addTicketFromJSON(Resources.ticket2);
         editTickets.addTicketFromJSON(Resources.ticket3);
@@ -114,7 +106,7 @@ public class InitDatabase {
 
         EditReservationsTable editReservations = new EditReservationsTable();
 
-// Add 20 reservations
+        // Add 20 reservations
         System.out.println("Adding reservations...");
         editReservations.addReservationFromJSON(Resources.reservation1);
         editReservations.addReservationFromJSON(Resources.reservation2);

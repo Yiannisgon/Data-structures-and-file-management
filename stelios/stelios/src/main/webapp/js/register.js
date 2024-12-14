@@ -1,7 +1,6 @@
 
 
-// Simplified JavaScript for the user registration form
-// Simplified JavaScript for the user registration form
+
 function submitForm() {
     // Collect form data
     var formData = {

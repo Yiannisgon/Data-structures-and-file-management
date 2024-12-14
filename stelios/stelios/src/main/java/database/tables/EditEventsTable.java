@@ -16,7 +16,6 @@ public class EditEventsTable {
         System.out.println("Received JSON for Event: bb " + json);
         Event event = jsonToEvent(json);
 
-        // Log parsed Event details
         System.out.println("Parsed Event Details:");
         System.out.println("Name: " + event.getName());
         System.out.println("Capacity: " + event.getCapacity());
@@ -24,7 +23,6 @@ public class EditEventsTable {
         System.out.println("Time: " + event.getTime());
         System.out.println("Type: " + event.getType());
 
-        // Add event to database
         addEvent(event);
     }
 
@@ -45,10 +43,6 @@ public class EditEventsTable {
     }
 
 
-    public String eventToJSON(Event event) {
-        Gson gson = new Gson();
-        return gson.toJson(event, Event.class);
-    }
 
     public void createEventsTable() throws SQLException, ClassNotFoundException {
         Connection con = DB_Connection.getConnection();
@@ -101,25 +95,6 @@ public class EditEventsTable {
     }
 
 
-    public Event databaseToEvent(int eventId) throws SQLException, ClassNotFoundException {
-        Connection con = DB_Connection.getConnection();
-        Statement stmt = con.createStatement();
-
-        try {
-            ResultSet rs = stmt.executeQuery("SELECT * FROM events WHERE event_id=" + eventId);
-            if (rs.next()) {
-                String json = DB_Connection.getResultsToJSON(rs);
-                Gson gson = new Gson();
-                return gson.fromJson(json, Event.class);
-            }
-        } catch (Exception e) {
-            System.err.println("Got an exception! ");
-            System.err.println(e.getMessage());
-        } finally {
-            stmt.close();
-        }
-        return null;
-    }
 
     public ArrayList<Event> getAllEvents() throws SQLException, ClassNotFoundException {
         Connection con = DB_Connection.getConnection();
@@ -157,18 +132,8 @@ public class EditEventsTable {
         }
         return events;
     }
-    public void deleteEvent(int eventId) throws ClassNotFoundException {
-        try {
-            Connection con = DB_Connection.getConnection();
-            Statement stmt = con.createStatement();
-            String deleteQuery = "DELETE FROM events WHERE event_id=" + eventId;
-            stmt.executeUpdate(deleteQuery);
-            System.out.println("# The event was successfully deleted from the database.");
-            stmt.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(EditEventsTable.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+
+
 
     public void deleteEventById(String eventId) throws ClassNotFoundException {
         String deleteQuery = "DELETE FROM events WHERE event_id = ?";

@@ -61,18 +61,11 @@ button:hover {
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  max-height: 80vh; /* Set a maximum height for the container */
-  overflow: auto;   /* Enable scrolling if content overflows */
+  max-height: 80vh;
+  overflow: auto;
 }
 
-#keeperList, #ownerList {
-  background-color: #fff;
-  padding: 15px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  max-height: 50vh; /* Set a maximum height for the user list divs */
-  overflow-y: auto; /* Enable vertical scrolling if content overflows vertically */
-}
+
 
 #totalRevenueDisplay {
   display: none; /* Hidden by default */
