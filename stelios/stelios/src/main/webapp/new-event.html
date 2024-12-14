@@ -28,6 +28,20 @@
       <option value="Theatre">Theatre</option>
     </select>
 
+    <h3>Ticket Information</h3>
+
+    <label for="vip-price">VIP Ticket Price:</label>
+    <input type="number" id="vip-price" name="vip-price" min="0" required>
+
+    <label for="vip-availability">VIP Ticket Availability:</label>
+    <input type="number" id="vip-availability" name="vip-availability" min="0" required>
+
+    <label for="ga-price">General Admission Ticket Price:</label>
+    <input type="number" id="ga-price" name="ga-price" min="0" required>
+
+    <label for="ga-availability">General Admission Ticket Availability:</label>
+    <input type="number" id="ga-availability" name="ga-availability" min="0" required>
+
     <br>
     <input type="button" id="signup-button" value="Sign Up" onclick="submitForm()">
   </form>

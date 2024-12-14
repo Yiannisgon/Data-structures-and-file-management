@@ -11,8 +11,6 @@ package database.init;
  */
 public class Resources {
 
-
-         //
     static String customer1 = "{\"name\":\"Victror VonDoom\",\"email\":\"victor.vondoom@mail.com\",\"credit_card_details\":\"4111111111111111\",\"balance\":50.0}";
     static String customer2 = "{\"name\":\"MF DOOM\",\"email\":\"mf.doom@mail.com\",\"credit_card_details\":\"4111111111112222\",\"balance\":60.0}";
     static String customer3 = "{\"name\":\"Goober Gooner\",\"email\":\"goober@mail.com\",\"credit_card_details\":\"4111111111113333\",\"balance\":75.0}";

@@ -1,13 +1,9 @@
-V10
+NOTES:
+WHEN USING TOMCAT 10 USE "jakarta" FOR SERVLET IMPORTS 
+WHEN USING TOMCAT 9 USE "javax" FOR SERVLET IMPORTS
 
-VISUAL OVERHAUL
-ALL PROCEDURES WORK
-REMOVED UNUSED FILES (FROM PETS ETC)
 
-TO DO: 
-VIEWS AND REPORT
-also
-forgot automated ticket making when making event
+V12 
+automated ticket making when making event FIXED (total ticket == availabiity not checked)
 
-V11
-4/6 VIEWS DONE
+TO DO : VIEWS/REPORT + ONE LAST CHECK

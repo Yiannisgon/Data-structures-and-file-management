@@ -1,7 +1,7 @@
 package servlets;
 
 import database.tables.EditEventsTable;
-import jakarta.servlet.annotation.WebServlet;
+import javax.servlet.annotation.WebServlet;
 import mainClasses.Event;
 import com.google.gson.Gson;
 

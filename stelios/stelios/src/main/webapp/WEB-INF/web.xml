@@ -109,11 +109,18 @@
         <servlet-name>GetReservationsByTimePeriod</servlet-name>
         <servlet-class>servlets.GetReservationsByTimePeriod</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CreateTicket</servlet-name>
+        <servlet-class>servlets.CreateTicket</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CreateTicket</servlet-name>
+        <url-pattern>/CreateTicket</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>GetReservationsByTimePeriod</servlet-name>
         <url-pattern>/GetReservationsByTimePeriod</url-pattern>
     </servlet-mapping>
-
 
 
     <servlet-mapping>

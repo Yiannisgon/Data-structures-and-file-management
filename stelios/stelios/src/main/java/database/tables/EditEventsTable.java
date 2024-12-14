@@ -66,11 +66,13 @@ public class EditEventsTable {
         stmt.close();
     }
 
-    public void addEvent(Event event) throws ClassNotFoundException {
+    public int addEvent(Event event) throws ClassNotFoundException {
+        int eventId = 0;
         try {
             Connection con = DB_Connection.getConnection();
             Statement stmt = con.createStatement();
             System.out.println("EVENT BEING ADDED");
+
             // Fix: Enclose `name` and `type` in single quotes
             String insertQuery = "INSERT INTO events (name, capacity, date, time, type) VALUES ("
                     + "'" + event.getName() + "'," // Enclosed in single quotes
@@ -83,11 +85,21 @@ public class EditEventsTable {
             stmt.executeUpdate(insertQuery);
             System.out.println("# The event was successfully added to the database.");
 
+            // Retrieve generated event_id
+            String getGeneratedIdQuery = "SELECT LAST_INSERT_ID()";
+            ResultSet rs = stmt.executeQuery(getGeneratedIdQuery);
+            if (rs.next()) {
+                eventId = rs.getInt(1); // Retrieve the generated event_id
+                System.out.println("Generated event_id: " + eventId);
+            }
+
             stmt.close();
         } catch (SQLException ex) {
             Logger.getLogger(EditEventsTable.class.getName()).log(Level.SEVERE, "Database Error: " + ex.getMessage(), ex);
         }
+        return eventId;
     }
+
 
     public Event databaseToEvent(int eventId) throws SQLException, ClassNotFoundException {
         Connection con = DB_Connection.getConnection();

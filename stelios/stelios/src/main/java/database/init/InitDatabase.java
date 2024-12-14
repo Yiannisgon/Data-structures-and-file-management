@@ -37,7 +37,7 @@ public class InitDatabase {
     public void dropDatabase() throws SQLException, ClassNotFoundException {
         Connection conn = getInitialConnection();
         Statement stmt = conn.createStatement();
-        String sql = "DROP DATABASE  HY359_2023";
+        String sql = "DROP DATABASE  HY360_2024";
         stmt.executeUpdate(sql);
         System.out.println("Database dropped successfully...");
     }
@@ -45,29 +45,12 @@ public class InitDatabase {
     public void initDatabase() throws SQLException, ClassNotFoundException {
         Connection conn = getInitialConnection();
         Statement stmt = conn.createStatement();
-        stmt.execute("CREATE DATABASE HY359_2023");
+        stmt.execute("CREATE DATABASE HY360_2024");
         stmt.close();
         conn.close();
     }
 
     public void initTables() throws SQLException, ClassNotFoundException {
-        //EditPetOwnersTable eut = new EditPetOwnersTable();
-        //eut.createPetOwnersTable();
-
-        //EditPetKeepersTable editkeepers = new EditPetKeepersTable();
-        //editkeepers.createPetKeepersTable();
-
-        //EditPetsTable editpets = new EditPetsTable();
-        //editpets.createPetsTable();
-
-//        EditBookingsTable editBookings = new EditBookingsTable();
-//        editBookings.createBookingTable();
-//
-//        EditReviewsTable editRevs = new EditReviewsTable();
-//        editRevs.createReviewTable();
-//
-//        EditMessagesTable editMsgs = new EditMessagesTable();
-//        editMsgs.createMessageTable();
 
         // New Classes
         EditCustomersTable editCustomers = new EditCustomersTable();

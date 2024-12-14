@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 Created-By: IntelliJ IDEA
-Built-By: georgesouladakis
-Build-Jdk: Eclipse Temurin 21.0.5 - aarch64
+Built-By: Yiannis Gonianakis
+Build-Jdk: 21.0.1
 

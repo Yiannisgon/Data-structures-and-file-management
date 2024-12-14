@@ -17,7 +17,6 @@ import mainClasses.Event;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
-
 @WebServlet(name = "CreateEvent", urlPatterns = {"/CreateEvent"})
 public class CreateEvent extends HttpServlet {
 
@@ -98,7 +97,10 @@ public class CreateEvent extends HttpServlet {
             // Add Event to database
             EditEventsTable eet = new EditEventsTable();
             try {
-                eet.addEvent(newEvent);
+                // Add the event and get the generated event_id
+                int eventId = eet.addEvent(newEvent);
+                newEvent.setEventId(eventId); // Set the eventId to the newly created event
+
                 System.out.println("Event successfully added to database.");
             } catch (Exception ex) {
                 System.err.println("Database error while adding event: " + ex.getMessage());
@@ -107,9 +109,9 @@ public class CreateEvent extends HttpServlet {
                 return;
             }
 
-            // Success response
+            // Success response, send the event details along with event_id
             response.setStatus(200);
-            out.println(gson.toJson(newEvent)); // Optionally return added event as JSON
+            out.println(gson.toJson(newEvent)); // Return the event with the event_id
         }
     }
 }
