@@ -254,15 +254,30 @@ public class EditReservationsTable {
             con.setAutoCommit(false); // Start a transaction
 
             // Step 1: Retrieve reservation details
-            String getReservationQuery = "SELECT event_id, ticket_count, ticket_type FROM reservations WHERE reservation_id = ?";
+            String getReservationQuery = "SELECT event_id, ticket_count, ticket_type, payment_amount, customer_id FROM reservations WHERE reservation_id = ?";
             try (PreparedStatement pstmt = con.prepareStatement(getReservationQuery)) {
                 pstmt.setString(1, reservationId);
 
                 try (ResultSet rs = pstmt.executeQuery()) {
                     if (rs.next()) {
+                        // Retrieve necessary fields from the reservation
                         int eventId = rs.getInt("event_id");
                         int ticketCount = rs.getInt("ticket_count");
                         String ticketType = rs.getString("ticket_type");
+                        float paymentAmount = rs.getFloat("payment_amount");
+                        int customerId = rs.getInt("customer_id");
+
+                        // Calculate refund amount with $1 deduction
+                        float refundAmount = paymentAmount - 1.0f;
+                        if (refundAmount < 0) {
+                            System.err.println("Refund amount cannot be negative.");
+                            con.rollback();
+                            return;
+                        }
+
+                        // Update total refund tax
+                        totalRefundTax += 1.0f;
+                        System.out.println("Total refund tax updated: " + totalRefundTax);
 
                         // Step 2: Update ticket availability
                         String updateAvailabilityQuery = "UPDATE tickets SET availability = availability + ? WHERE event_id = ? AND type = ?";
@@ -271,28 +286,42 @@ public class EditReservationsTable {
                             updateStmt.setInt(2, eventId);
                             updateStmt.setString(3, ticketType);
                             updateStmt.executeUpdate();
-                            System.out.println("Ticket availability successfully restored.");
+                            System.out.println("Ticket availability restored for event ID: " + eventId + ", type: " + ticketType);
                         }
 
-                        // Step 3: Delete the reservation
+                        // Step 3: Add the reduced refund amount to the customer's balance
+                        String updateBalanceQuery = "UPDATE customers SET balance = balance + ? WHERE customer_id = ?";
+                        try (PreparedStatement balanceStmt = con.prepareStatement(updateBalanceQuery)) {
+                            balanceStmt.setFloat(1, refundAmount); // Refund the reduced amount
+                            balanceStmt.setInt(2, customerId); // Target customer
+                            int affectedRows = balanceStmt.executeUpdate();
+                            if (affectedRows == 0) {
+                                throw new SQLException("Failed to update balance: Customer ID not found.");
+                            }
+                            System.out.println("Balance updated for customer ID: " + customerId);
+                        }
+
+                        // Step 4: Delete the reservation
                         try (PreparedStatement deleteStmt = con.prepareStatement(deleteQuery)) {
                             deleteStmt.setString(1, reservationId);
                             int rowsAffected = deleteStmt.executeUpdate();
-
                             if (rowsAffected > 0) {
-                                System.out.println("# Reservation with ID " + reservationId + " successfully deleted.");
+                                System.out.println("Reservation with ID " + reservationId + " deleted successfully.");
                             } else {
-                                System.out.println("# No reservation found with ID " + reservationId);
+                                System.out.println("No reservation found with ID: " + reservationId);
                             }
                         }
 
-                        con.commit(); // Commit the transaction
+                        // Commit the transaction
+                        con.commit();
+                        System.out.println("Transaction committed successfully.");
                     } else {
                         System.err.println("No reservation found with ID: " + reservationId);
                     }
                 }
             } catch (SQLException ex) {
-                con.rollback(); // Rollback on error
+                con.rollback(); // Rollback in case of error
+                System.err.println("Transaction rolled back due to an error: " + ex.getMessage());
                 throw new RuntimeException("Error during reservation deletion: " + ex.getMessage(), ex);
             }
         } catch (SQLException ex) {
